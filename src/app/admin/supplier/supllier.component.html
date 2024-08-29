@@ -1,0 +1,270 @@
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Manage Supplier</h1>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-circle" type="button" (click)="searchSuppliers()">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-circle" (click)="openCreateSupplier()">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                          <div id="dataTable_filter" class="dataTables_filter">
+                            <label>Search:
+                              <input type="search"
+                                class="form-control form-control-sm"
+                                placeholder="Phone number" [(ngModel)]="phoneNumber"
+                                aria-controls="dataTable"/></label>
+                          </div>
+                        </div>
+          
+                        <div class="col-sm-12 col-md-4">
+                          <div id="dataTable_filter" class="dataTables_filter">
+                            <label>Search:
+                              <input type="search"
+                                class="form-control form-control-sm" [(ngModel)]="name"
+                                placeholder="Full name"
+                                aria-controls="dataTable"/></label>
+                          </div>
+                        </div>
+          
+                        <div class="col-sm-12 col-md-4">
+                          <div id="dataTable_filter" class="dataTables_filter">
+                            <label>Search:
+                              <input type="search"
+                                class="form-control form-control-sm" [(ngModel)]="email"
+                                placeholder="Email"
+                                aria-controls="dataTable"/></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row" style="margin-top: 10px;">
+          
+                        <div class="col-sm-12 col-md-6">
+                          <div class="dataTables_length" id="dataTable_length">
+                            <label>Show: <select name="dataTable_length"
+                                aria-controls="dataTable" [(ngModel)]="itemsPerPage"
+                                class="custom-select custom-select-sm form-control form-control-sm">
+                                <option [value]="10">10</option>
+                                <option [value]="25">25</option>
+                                <option [value]="50">50</option>
+                                <option [value]="100">100</option>
+                              </select> entries</label>
+                          </div>
+                        </div>
+          
+                        <div class="col-sm-12 col-md-6">
+                          <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                [(ngModel)]="isActive" checked>
+                            <label class="form-check-label" for="flexSwitchCheckChecked"> Active</label>
+                        </div>
+                        </div>
+                      </div>
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-12">
+                            <table class="table-warning table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Supplier name</th>
+                                        <th scope="col">Phone number</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Active</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let supplier of suppliers; let i = index">
+                                        <th scope="row" >{{ supplier.id }}</th>
+                                        <td>
+                                           {{ supplier.supplierName }}
+                                        </td>
+                                        <td>
+                                          {{ supplier.phoneNumber }}
+                                       </td>
+                                        <td>{{ supplier.email }}</td>
+                                        <td>{{ supplier.address }}</td>
+                                        <td>{{ supplier.active }}</td>
+                                        <td *ngIf="supplier.active">
+                                            <button class="btn" type="button" (click)="openModal(supplier.id)">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        <td *ngIf="supplier.active">
+                                            <button [id]="'button-option-edit' + i" class="btn button-option-edit" type="button" (click)="openUpdateSupplier(supplier.id)">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                <nav aria-label="Page navigation">
+                                  <ul class="pagination">
+                                    <li class="page-item" *ngIf="currentPage > 0">
+                                      <a class="page-link" (click)="onPageChange(0)">First</a>
+                                    </li>
+                                    <li class="page-item" *ngIf="currentPage > 0">
+                                      <a class="page-link" (click)="onPageChange(currentPage - 1)">
+                                        <i class="fa fa-chevron-left"></i>
+                                      </a>
+                                    </li>
+                                    <ng-container *ngFor="let page of visiblePages">
+                                        <li class="page-item" [ngClass]="{'active': page === currentPage + 1}">
+                                          <a class="page-link" (click)="onPageChange(page - 1)">{{ page }}</a>
+                                        </li>
+                                      </ng-container>
+                                    <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                      <a class="page-link" (click)="onPageChange(currentPage + 1)">
+                                        <i class="fa fa-chevron-right"></i>
+                                      </a>
+                                    </li>
+                                    <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                      <a class="page-link" (click)="onPageChange(totalPages - 1)">Last</a>
+                                    </li>
+                                  </ul>
+                                </nav>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- The Modal delete -->
+<div class="modal" tabindex="-1" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Notification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to delete this supplier?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-danger" (click)="delete()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!--create supplier-->
+
+<div class="modal" id="modalCreateSupplier">
+  <div class="modal-dialog">
+      <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h4 class="modal-title">Create Supplier</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeCreateSupplier()"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+              <div class="container">
+                  <form id="createOptionForm" #registerForm="ngForm">
+                      <div class="form-group">
+                          <label for="optionName">Supplier Name</label>
+                          <input type="text" id="optionName" placeholder="Enter supplier name" name="supplierName"
+                          [(ngModel)]="supplierName" required>
+                      </div>
+                      <div class="form-group" >
+                          <label for="phoneNumber">Phone number</label>
+                          <input type="text" id="phoneNumber" placeholder="Enter phone number" name="phoneNumberCreate" [(ngModel)] = "phoneNumberCreate" required>
+                      </div>
+                      <div class="form-group" >
+                        <label for="email">Email</label>
+                        <input type="text" id="email" placeholder="Enter email" name="emailCreate" [(ngModel)] = "emailCreate" required>
+                      </div>
+                      <div class="form-group" >
+                        <label for="address">Address</label>
+                        <input type="text" id="address" placeholder="Enter address" name="address" [(ngModel)] = "address" required>
+                      </div>
+                  </form>
+              </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="save()">Save</button>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<!--Update supplier-->
+<div class="modal" id="modalUpdateSupplier">
+  <div class="modal-dialog">
+      <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h4 class="modal-title">Update Supplier</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeUpdateSupplier()"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+              <div class="container">
+                  <form id="createOptionForm" #registerForm="ngForm">
+                      <div class="form-group">
+                          <label for="optionName">Supplier Name</label>
+                          <input type="text" id="optionName" placeholder="Enter supplier name" name="supplierName"
+                          [(ngModel)]="supplierName" required>
+                      </div>
+                      <div class="form-group" >
+                          <label for="phoneNumber">Phone number</label>
+                          <input type="text" id="phoneNumber" placeholder="Enter phone number" name="phoneNumberCreate" [(ngModel)] = "phoneNumberCreate" required>
+                      </div>
+                      <div class="form-group" >
+                        <label for="email">Email</label>
+                        <input type="text" id="email" placeholder="Enter email" name="emailCreate" [(ngModel)] = "emailCreate" required>
+                      </div>
+                      <div class="form-group" >
+                        <label for="address">Address</label>
+                        <input type="text" id="address" placeholder="Enter address" name="address" [(ngModel)] = "address" required>
+                      </div>
+                  </form>
+              </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="update()">Update</button>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<div class="card flex justify-content-center">
+    <p-toast />
+</div>
+

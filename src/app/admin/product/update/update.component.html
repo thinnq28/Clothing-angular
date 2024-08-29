@@ -1,0 +1,89 @@
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">Update Product</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <form class="row g-3" enctype="multipart/form-data">
+                        <div class="col-md-6">
+                            <label for="inputProductName" class="form-label">Product name</label>
+                            <input type="text" class="form-control" id="inputProductName" name="productName"
+                                [(ngModel)]="productName">
+                        </div>
+
+                        <div class="col-md-6" id="commodity">
+                            <label for="inputState" class="form-label">Choose commodity from the list</label>
+                            <input class="form-control" name="commodity" id="commodity" [(ngModel)]="nameCommodity" name="nameCommodity"
+                              (input)="getCommoditiesByName()">
+                            <select id="commodities" class="form-select" style="margin-top: 5px" name="commodityId"
+                              [(ngModel)]="commodityId">
+                              <option *ngFor="let commodity of commodities" [value]="commodity.id"
+                              [selected]="commodity.id == product?.commodityId"> {{ commodity.commodityName }}</option>
+                            </select>
+                          </div>
+              
+
+                        <div class="col-md-6" id="dynamicFormGroupContainer">
+                            <label for="browser" class="form-label">Choose options from the list:</label>
+                            <div [id]="'options' + i" *ngFor="let opt of product?.options, let i = index" class="row"
+                                style="padding-left: 12px;">
+                                <select class="form-select col-md-6" style="margin-top: 5px; width: 90%" name="optionId"
+                                    disabled>
+                                    <option *ngFor="let option of options" [value]="option.id"
+                                        [selected]="option.id == opt.id"> {{ option.name }}</option>
+                                </select>
+                                <button type="button" [id]="'btn-remove' + i" class="btn btn-outline-danger col-md-1"
+                                    style="margin-left: 5px; margin-top: 5px; padding: 5px 10px; font-size: 10px; height: 36px; width: 60px"
+                                    (click)="removeOption(i)">-</button>
+                            </div>
+                            <div id="options"></div>
+
+                            <button type="button" id="insertInput" class="btn btn-primary" style="margin-top: 5px"
+                                (click)="insertSelection()">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <div class="col-md-6" id="supplier">
+                            <label for="inputState" class="form-label">Choose supplier from the list</label>
+                            <input class="form-control" name="supplier" id="supplier" [(ngModel)]="name" name="name"
+                                (input)="getSuppliersByName()">
+                            <select id="suppliers" class="form-select" style="margin-top: 5px" name="supplierId"
+                                [(ngModel)]="supplierId">
+                                <option *ngFor="let supplier of suppliers" [value]="supplier.id"
+                                    [selected]="supplier.id == product?.supplierId"> {{ supplier.supplierName }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="inputDescription" class="form-label">Description</label>
+                            <textarea type="text" class="form-control" id="inputDescription" placeholder="1234 Main St"
+                                name="description" [(ngModel)]="description"></textarea>
+                        </div>
+                        <div class="col-md-12">
+
+                            <label for="images" class="form-label">Image:</label>
+                            <img src="{{ product?.imageUrl }}" class="rounded-square" alt="Thumbnail" width="100"
+                                height="100" (click)="imageSource(product!.imageUrl)">
+                            <br />
+                            <input type="file" id="images" name="image" multiple (change)="onFileChange($event)"
+                                accept="image/*">
+                            <br />
+                            <label id="result" style="color:rgb(43, 60, 193);"></label>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary" (click)="updateProduct()">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card flex justify-content-center">
+    <p-toast />
+</div>

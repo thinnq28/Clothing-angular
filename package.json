@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:shop-app-angular": "node dist/shop-app-angular/server/server.mjs"
+    "serve:ssr:shop-app-angular": "node dist/shop-app-angular/server/server.mjs",
+    "serve:ssr:header": "node dist/header/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -20,8 +21,20 @@
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/platform-server": "^18.1.0",
     "@angular/router": "^18.1.0",
-    "@angular/ssr": "^18.1.0",
+    "@angular/ssr": "^18.1.1",
+    "@auth0/angular-jwt": "^5.2.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@ng-bootstrap/ng-bootstrap": "^17.0.0",
+    "@popperjs/core": "^2.11.8",
+    "@types/bootstrap": "^5.2.10",
+    "bootstrap": "^5.3.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "express": "^4.18.2",
+    "font-awesome": "^4.7.0",
+    "localstorage-polyfill": "^1.0.1",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

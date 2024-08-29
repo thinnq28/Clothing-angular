@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <h1 class="h3 mb-2 text-gray-800">Create Product</h1>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+          <form class="row g-3" enctype="multipart/form-data">
+            <div class="col-md-6">
+              <label for="inputProductName" class="form-label">Product name</label>
+              <input type="text" class="form-control" id="inputProductName" name="productName"
+                [(ngModel)]="productName">
+            </div>
+
+            <div class="col-md-6" id="commodity">
+              <label for="inputState" class="form-label">Choose commodity from the list</label>
+              <input class="form-control" name="commodity" id="commodity" [(ngModel)]="nameCommodity" name="nameCommodity"
+                (input)="getCommoditiesByName()">
+              <select id="commodities" class="form-select" style="margin-top: 5px" name="commodityId"
+                [(ngModel)]="commodityId">
+                <option *ngFor="let commodity of commodities" [value]="commodity.id"> {{ commodity.commodityName }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6" id="dynamicFormGroupContainer">
+              <label for="browser" class="form-label">Choose options from the list:</label>
+              <select id="options" class="form-select" style="margin-top: 5px" name="optionId">
+                <option *ngFor="let option of options" [value]="option.id"> {{ option.name }}</option>
+              </select>
+              <button type="button" id="insertInput" class="btn btn-primary" style="margin-top: 5px"
+                (click)="insertSelection()">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+
+            <div class="col-md-6" id="supplier">
+              <label for="inputState" class="form-label">Choose supplier from the list</label>
+              <input class="form-control" name="supplier" id="supplier" [(ngModel)]="name" name="name"
+                (input)="getSuppliersByName()">
+              <select id="suppliers" class="form-select" style="margin-top: 5px" name="supplierId"
+                [(ngModel)]="supplierId">
+                <option *ngFor="let supplier of suppliers" [value]="supplier.id"> {{ supplier.supplierName }}</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label for="inputDescription" class="form-label">Description</label>
+              <textarea type="text" class="form-control" id="inputDescription" placeholder="1234 Main St"
+                name="description" [(ngModel)]="description"></textarea>
+            </div>
+            <div class="col-md-12">
+              <label for="images" class="form-label">Image:</label>
+              <input type="file" id="images" name="image" multiple (change)="onFileChange($event)" accept="image/*">
+              <br />
+              <label id="result" style="color:rgb(39, 49, 128);"></label>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" (click)="insertProduct()">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

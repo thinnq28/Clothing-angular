@@ -1,0 +1,49 @@
+<header class="p-3 mb-3 border-bottom">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+        <i class="fa-solid fa-shop"></i>
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a routerLink="/" class="nav-link px-2 link-secondary">Trang chủ</a></li>
+
+        <!-- Dropdown for "Inventory" -->
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link px-2 link-dark dropdown-toggle" 
+             id="inventoryDropdown" (click)="toggleInventoryDropdown()">
+            Loại Sản Phẩm
+          </a>
+          <ul class="dropdown-menu text-small" [class.show]="isInventoryDropdownOpen" aria-labelledby="inventoryDropdown">
+            <li *ngFor="let commodity of commodities"><a class="dropdown-item" [routerLink]="['/commodity', commodity.commodityName]">{{ commodity.commodityName }}</a></li>
+          </ul>
+        </li>
+        
+        <li><a href="#" class="nav-link px-2 link-dark">Sell Off</a></li>
+        <li><a href="#" class="nav-link px-2 link-dark">Tin hot</a></li>
+        <li><a routerLink="/order" class="nav-link px-2 link-dark">Giỏ hàng</a></li>
+      </ul>
+
+      <form class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" #searchForm>
+        <input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="productName" [(ngModel)]="productName">
+        <button class="btn btn-outline-dark" type="button" (click)="search()">Search</button>
+      </form>
+
+      <div class="dropdown text-end" *ngIf="user && isGuest">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" 
+        (click)="toggleDropdown()">
+          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu text-small" [class.show]="isDropdownOpen" aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" href="#">New project...</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" (click)="signOut()">Sign out</a></li>
+        </ul>
+      </div>
+      <button type="button" class="btn btn-link" *ngIf="!user || !isGuest" (click)="redirectToLogin()">Login</button>
+      <button type="button" class="btn btn-link" *ngIf="!user || !isGuest" (click)="redirectToRegister()">Register</button>
+    </div>
+  </div>
+</header>

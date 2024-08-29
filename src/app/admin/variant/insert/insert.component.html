@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <h1 class="h3 mb-2 text-gray-800">Create Variant</h1>
+
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+          <form class="row g-3" enctype="multipart/form-data">
+
+            <div class="col-md-6" id="product">
+              <label for="inputState" class="form-label">Choose product from the list</label>
+              <input class="form-control" name="supplier" id="supplier" [(ngModel)]="name" name="name"
+                (input)="getProductsByName()">
+              <select id="products" class="form-select" style="margin-top: 5px" name="productId" [(ngModel)]="productId"
+                (change)="selectProduct($event)">
+                <option selected disabled>Choose the product</option>
+                <option *ngFor="let product of products" [value]="product.id"> {{ product.productName }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="inputPrice" class="form-label">Price</label>
+              <input type="text" class="form-control" id="inputPrice" name="price" [(ngModel)]="price">
+            </div>
+
+            <div class="col-md-12">
+              
+              <label for="images" class="form-label">Image:</label>
+              <input type="file" id="images" name="image" multiple (change)="onFileChange($event)" accept="image/*">
+              <h4 id="result" style="color:rgb(43, 60, 193);"></h4>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" (click)="insert()">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card flex justify-content-center">
+  <p-toast />
+</div>

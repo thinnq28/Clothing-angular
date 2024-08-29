@@ -1,0 +1,72 @@
+<div class="container-fluid">
+  <h1 class="h3 mb-2 text-gray-800">Update Variant</h1>
+
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+          <form class="row g-3" enctype="multipart/form-data">
+
+            <div class="col-md-6" id="product">
+              <label for="inputState" class="form-label">Product Name: </label>
+              <input type="text" style="display: none" class="form-control" id="productId" name="productId"
+                [(ngModel)]="productId">
+              <label class="form-label" style="margin-left: 5px;">{{ product?.productName }}</label>
+
+              <br />
+              <label for="inputState" class="form-label">Variant Name: </label>
+              <label for="inputState" class="form-label" style="margin-left: 5px;">{{ variant?.variantName }}</label>
+            </div>
+
+            <div class="col-md-6">
+              <ng-container *ngFor="let option of options, let i = index">
+                <label>{{ option.name }}</label>
+                <div class="form-check form-switch" *ngFor="let optionValue of option.optionValues, let j = index">
+                  <input type="radio" class="form-check-input property" [id]="'flexSwitchCheckChecked' + i + j"
+                    [name]="'option-value' + i" [checked]="variant?.optionValueIds?.includes(optionValue.id)"
+                    [value]="optionValue.id" />
+                  <label [for]="'flexSwitchCheckChecked' + i + j" class="form-check-label">{{ optionValue.name}}</label>
+                </div>
+              </ng-container>
+
+            </div>
+            <div class="col-md-6">
+              <label for="inputQuantity" class="form-label">Quantity</label>
+              <input type="text" class="form-control" id="inputQuantity" name="quantity" [(ngModel)]="quantity">
+            </div>
+
+            <div class="col-md-6">
+              <label for="inputPrice" class="form-label">Price</label>
+              <input type="text" class="form-control" id="inputPrice" name="price" [(ngModel)]="price">
+            </div>
+
+            <div class="col-md-12">
+              <label for="images" class="form-label">Images:</label>
+              <ng-container *ngFor="let image of imageResponses, let i = index">
+
+                <div class="img-wrap">
+                  <span class="close" (click)="removeImage(i)">&times;</span>
+                  <input type="hidden" class="form-control" name="image-id" [value]="image" />
+                  <img [src]="baseUrl + image.url" class="rounded-square" alt="Thumbnail" width="200" data-id="123">
+                </div>
+
+              </ng-container>
+              <br />
+              <input type="file" id="images" name="image" multiple (change)="onFileChange($event)" accept="image/*">
+              <br />
+              <label id="result" style="color:rgb(39, 49, 128);"></label>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" (click)="update()">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card flex justify-content-center">
+  <p-toast />
+</div>

@@ -1,0 +1,143 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Upload Excel</h1>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="input-group-append">
+                        <form enctype="multipart/form-data">
+                            <div class="input-group">
+                                <label class="input-group-text btn btn-primary" for="images">
+                                    <i class="fas fa-file-upload me-2"></i> Upload Excel
+                                </label>
+                                <input type="file" id="images" name="image" multiple (change)="onFileChange($event)"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="dataTables_length" id="dataTable_length">
+                                <label>Show entries: <select name="dataTable_length" aria-controls="dataTable"
+                                        [(ngModel)]="rowsPerPage" (change)="updatePagination()"
+                                        class="custom-select custom-select-sm form-control form-control-sm">
+                                        <option [value]="10">10</option>
+                                        <option [value]="25">25</option>
+                                        <option [value]="50">50</option>
+                                        <option [value]="100">100</option>
+                                    </select></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end" *ngIf="errors.length > 0">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            (click)="closeAllMessage()"></button>
+                    </div>
+                    <div *ngFor="let error of errors" class="alert alert-danger alert-dismissible fade show"
+                        role="alert" style="margin-top: 10px">
+                        <strong>Error!</strong> {{ error }}
+                    </div>
+
+
+
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">SKU ID</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Unit Price</th>
+                                        <th scope="col">Total Amout</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let purchaseOrder of paginatedPurchaseOrders, let i = index">
+                                        <td>{{ purchaseOrder.ordinalNumber }}</td>
+                                        <td>{{ purchaseOrder.skuId }}</td>
+                                        <td>{{ purchaseOrder.quantity }}</td>
+                                        <td>{{ purchaseOrder.unitPrice | number:'1.0-0' }} ₫</td>
+                                        <td>{{ purchaseOrder.totalAmount | number:'1.0-0' }} ₫</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-danger"
+                                                (click)="delete(i)">-</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="d-flex justify-content-center">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <li class="page-item" *ngIf="currentPage > 0">
+                                            <a class="page-link" (click)="onPageChange(0)">First</a>
+                                        </li>
+                                        <li class="page-item" *ngIf="currentPage > 0">
+                                            <a class="page-link" (click)="onPageChange(currentPage - 1)">
+                                                <i class="fa fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        <ng-container *ngFor="let page of visiblePages">
+                                            <li class="page-item" [ngClass]="{'active': page === currentPage + 1}">
+                                                <a class="page-link" (click)="onPageChange(page - 1)">{{ page }}</a>
+                                            </li>
+                                        </ng-container>
+                                        <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                            <a class="page-link" (click)="onPageChange(currentPage + 1)">
+                                                <i class="fa fa-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                            <a class="page-link" (click)="onPageChange(totalPages - 1)">Last</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+                            <div class="row d-flex justify-content-start">
+                                <div class="col-sm-12 col-md-4">
+                                    <div id="dataTable_filter" class="dataTables_filter">
+                                        <label>Search Supplier: <input type="search" class="form-control form-control-sm" placeholder="Supplier name"
+                                                [(ngModel)]="name" aria-controls="dataTable" [(ngModel)]="name" name="name" (input)="getSuppliersByName()"/></label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <div class="dataTables_length" id="dataTable_length">
+                                        <label>List:<select id="suppliers" class="form-select" style="margin-top: 5px" name="supplierId"
+                                            [(ngModel)]="supplierId">
+                                            <option *ngFor="let supplier of suppliers" [value]="supplier.id"> {{ supplier.supplierName }}</option>
+                                          </select></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-4">
+                                    <div class="d-flex justify-content-end">
+                                        <strong>Total Amount: {{ totalAmount | number:'1.0-0' }} ₫</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-outline-info" (click)="save()">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card flex justify-content-center">
+    <p-toast />
+</div>

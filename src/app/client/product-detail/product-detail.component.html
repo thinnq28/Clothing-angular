@@ -1,0 +1,99 @@
+<app-header></app-header>
+<div class="container">
+  <div class="intro-section">
+    <h1 style="color: black" class="card-title fw-semibold mb-4">Đây là trang chi tiết sản phẩm</h1>
+    <h5>Tên sản phẩm: <p class="m-0 font-weight-bold text-primary">{{ product?.productName }}</p></h5>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div *ngFor="let image of variant?.images; let i = index" class="carousel-item"
+            [ngClass]="{'active': i === currentImageIndex}">
+            <div class="square-image">
+              <img [src]="image.url" class="product-image" alt="Product Image">
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev"
+          (click)="previousImage()">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next"
+          (click)="nextImage()">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <div class="row">
+        <div class="thumbnail-container">
+          <div *ngFor="let image of images; let i = index" class="thumbnail-item"
+            [ngClass]="{'active': i === currentImageIndex}" (click)="thumbnailClick(i)">
+            <img [src]="image.url" class="thumbnail-image" alt="Thumbnail Image">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="product-details">
+        <div class="cards-container">
+        <ng-container *ngFor="let variant of variants">
+          <div class="card border-left-info shadow h-100 py-2" id="cards">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                  </div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-auto">
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                        <img [src]="variant.images[0].url" alt="Variant Image" class="variant-image">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <h6>{{ variant.variantName }}</h6>
+                      <p>Giá: {{ variant.price | currency:'VND' }}</p>
+                      <p>Số lượng: {{ variant.quantity }}</p>
+                      <div *ngFor="let option of variant.options" class="row">
+                        <p>{{ option.name }}: 
+                          <ng-container *ngFor="let optionValue of option.optionValues; let isLast = last">
+                            {{ optionValue.name }}<span *ngIf="!isLast">, </span>
+                          </ng-container>
+                        </p>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check form-switch">
+                    <input [disabled]="variant.quantity <= 0" class="form-check-input" name="radio-variant" type="radio" id="flexSwitchCheckDefault" (click)="chooseVariant(variant.id)">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        </div>
+        <div class="product-actions">
+          <button class="btn btn-primary" (click)="addToCart()" style="color: black;">Thêm vào giỏ hàng</button>
+          <button class="btn btn-success" (click)="buyNow()">Mua ngay</button>
+        </div>
+        <div class="product-quantity">
+          <div class="border-wrapper">
+            <button (click)="decreaseQuantity()" class="btn btn-outline-info" style="color: black;">-</button>
+            <input style="color: black" type="text" [value]="quantity">
+            <button (click)="increaseQuantity()" class="btn btn-outline-info" type="button"
+              style="color: black;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card flex justify-content-center">
+  <p-toast />
+</div>
+
+<app-footer></app-footer>

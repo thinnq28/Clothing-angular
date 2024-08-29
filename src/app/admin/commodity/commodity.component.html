@@ -1,0 +1,219 @@
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Manage Commodity</h1>
+
+    <div class="card shadow mb-4">
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-circle" type="button" (click)="searchCommodities()">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-circle" (click)="openCreateSupplier()">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                          <div id="dataTable_filter" class="dataTables_filter">
+                            <label>Search:
+                              <input type="search"
+                                class="form-control form-control-sm" [(ngModel)]="name"
+                                placeholder="Full name"
+                                aria-controls="dataTable"/></label>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="dataTables_length" id="dataTable_length">
+                              <label>Show entries: <select name="dataTable_length"
+                                  aria-controls="dataTable" [(ngModel)]="itemsPerPage"
+                                  class="custom-select custom-select-sm form-control form-control-sm">
+                                  <option [value]="10">10</option>
+                                  <option [value]="25">25</option>
+                                  <option [value]="50">50</option>
+                                  <option [value]="100">100</option>
+                                </select></label>
+                            </div>
+                          </div>
+            
+                          <div class="col-sm-12 col-md-4">
+                            <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                  [(ngModel)]="isActive" checked>
+                              <label class="form-check-label" for="flexSwitchCheckChecked"> Active</label>
+                          </div>
+                          </div>
+          
+                      </div>
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-12">
+                            <table class="table-warning table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Commodity name</th>
+                                        <th scope="col">Active</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let commodity of commodities; let i = index">
+                                        <th scope="row" >{{ commodity.id }}</th>
+                                        <td>
+                                           {{ commodity.commodityName }}
+                                        </td>
+                                        <td>
+                                            {{ commodity.active }}
+                                         </td>
+                                        <td *ngIf="commodity.active">
+                                            <button class="btn" type="button" (click)="openModal(commodity.id)">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        <td *ngIf="commodity.active">
+                                            <button [id]="'button-option-edit' + i" class="btn button-option-edit" type="button" (click)="openUpdateSupplier(commodity.id)">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                <nav aria-label="Page navigation">
+                                  <ul class="pagination">
+                                    <li class="page-item" *ngIf="currentPage > 0">
+                                      <a class="page-link" (click)="onPageChange(0)">First</a>
+                                    </li>
+                                    <li class="page-item" *ngIf="currentPage > 0">
+                                      <a class="page-link" (click)="onPageChange(currentPage - 1)">
+                                        <i class="fa fa-chevron-left"></i>
+                                      </a>
+                                    </li>
+                                    <ng-container *ngFor="let page of visiblePages">
+                                        <li class="page-item" [ngClass]="{'active': page === currentPage + 1}">
+                                          <a class="page-link" (click)="onPageChange(page - 1)">{{ page }}</a>
+                                        </li>
+                                      </ng-container>
+                                    <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                      <a class="page-link" (click)="onPageChange(currentPage + 1)">
+                                        <i class="fa fa-chevron-right"></i>
+                                      </a>
+                                    </li>
+                                    <li class="page-item" *ngIf="currentPage < totalPages - 1">
+                                      <a class="page-link" (click)="onPageChange(totalPages - 1)">Last</a>
+                                    </li>
+                                  </ul>
+                                </nav>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- The Modal delete -->
+<div class="modal" tabindex="-1" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Notification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to delete this commodity?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-danger" (click)="delete()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!--create supplier-->
+
+<div class="modal" id="modalCreateSupplier">
+  <div class="modal-dialog">
+      <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h4 class="modal-title">Create Supplier</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeCreateSupplier()"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+              <div class="container">
+                  <form id="createOptionForm">
+                      <div class="form-group">
+                          <label for="commodityName">Commodity Name</label>
+                          <input type="text" id="commodityName" class="form-control" placeholder="Enter commodity name" name="commodityName"
+                          [(ngModel)]="commodityName" required>
+                      </div>
+                  </form>
+              </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="save()">Save</button>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<!--Update supplier-->
+<div class="modal" id="modalUpdateSupplier">
+  <div class="modal-dialog">
+      <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+              <h4 class="modal-title">Update Supplier</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeUpdateSupplier()"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+              <div class="container">
+                  <form id="createOptionForm" #registerForm="ngForm">
+                      <div class="form-group">
+                          <label for="commodityName">Supplier Name</label>
+                          <input type="text" id="commodityName" class="form-control" placeholder="Enter commodity name" name="commodityName"
+                          [(ngModel)]="commodityName" required>
+                      </div>
+                  </form>
+              </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="update()">Update</button>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<div class="card flex justify-content-center">
+    <p-toast />
+</div>
+

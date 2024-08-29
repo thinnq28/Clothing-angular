@@ -1,0 +1,55 @@
+<div class="profile-container" >
+    <div class="profile-header">
+        <h1>User Profile</h1>
+    </div>
+    <form [formGroup]="userProfileForm">
+    <div class="profile-details">
+        <div class="profile-item">
+            <label class="label" for="fullName">Full Name:</label>
+            <input class="value" type="text" 
+            id="fullName" value="John Doe"
+            formControlName="fullname" 
+            [class.is-invalid]="userProfileForm.get('fullname')!.invalid && userProfileForm.get('fullname')!.touched">
+            <div 
+                    *ngIf="userProfileForm.get('fullname')!.invalid && userProfileForm.get('fullname')!.touched" 
+                    class="invalid-feedback">
+                    Họ và tên là trường bắt buộc.
+                </div>
+        </div>
+        <div class="profile-item">
+            <label class="label" for="email">Email:</label>
+            <input class="value" type="email" id="email" 
+            value="john.doe@example.com"
+            formControlName="email" 
+            [class.is-invalid]="userProfileForm.get('email')!.invalid && userProfileForm.get('email')!.touched">
+            <div 
+                    *ngIf="userProfileForm.get('fullname')!.invalid && userProfileForm.get('fullname')!.touched" 
+                    class="invalid-feedback">
+                    Email là trường bắt buộc.
+                </div>
+        </div>
+        <div class="profile-item">
+            <label class="label" for="phoneNumber">Phone Number:</label>
+            <input class="value" type="text" id="phoneNumber" readonly formControlName="phone_number">
+        </div>
+        <div class="profile-item">
+            <label class="label" for="address">Address:</label>
+            <input class="value" type="text" id="address" formControlName="address" 
+            [class.is-invalid]="userProfileForm.get('email')!.invalid && userProfileForm.get('email')!.touched">
+        </div>
+        <div class="profile-item">
+            <label class="label" for="dob">Date of Birth:</label>
+            <input class="value" type="date" id="dob" 
+            formControlName="date_of_birth" 
+            [class.is-invalid]="userProfileForm.get('email')!.invalid && userProfileForm.get('email')!.touched">
+        </div>
+        <div class="button-container">
+            <p-button type="button" severity="primary" (click)="save()" label="Submit"></p-button>
+        </div>
+    </div>
+</form>
+</div>
+
+<div class="card flex justify-content-center">
+    <p-toast />
+</div>

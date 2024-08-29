@@ -1,0 +1,125 @@
+@import '../../styles/shared-styles.scss';
+
+.container {
+    color: #333; /* Changed to a dark font color for better readability */
+    background-color: #f9f9f9; /* Light background color */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.intro-section {
+    color: #333;
+    padding: 20px;
+    text-align: center;
+}
+
+.product-header {
+    color: $shopapp-tint-color;
+}
+
+.form-control {
+    border: 1px solid #a1aeee; /* Adjusted border color */
+    color: #333;
+    background-color: #fff; /* White background for input fields */
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    border-color: #a1aeee;
+    background-color: #e9f0ff; /* Soft blue focus background */
+}
+
+.form-label {
+    color: #333;
+}
+
+.product-header {
+    color: $shopapp-tint-color;
+}
+
+.product-order {
+    color: #e75d5d;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-radius: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* White background for table */
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.product-name {
+    color: #333;
+    text-align: left;
+}
+
+.btn-gradient {
+    background: linear-gradient(to right, $shopapp-tint-color, $shopapp-color);
+    color: white;
+    border-radius: 30px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(to right, $shopapp-color, $shopapp-tint-color);
+}
+
+.border-wrapper {
+    border: 1px solid #a1aeee;
+    border-radius: 5px;
+}
+
+.product-quantity {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.product-quantity button {
+    background-color: transparent;
+    border: none;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.product-quantity input {
+    background-color: transparent;
+    border: none;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    text-align: center;
+    width: 40px;
+    margin: 0 10px;
+}
+
+.product-quantity input:focus {
+    outline: none;
+}

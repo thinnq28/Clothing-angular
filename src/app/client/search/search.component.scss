@@ -1,0 +1,20 @@
+/* Ensure the images are all the same size */
+.card-img-top {
+    width: 100%;      /* Set the width to 100% of the container */
+    height: 500px;    /* Increased the fixed height for the images */
+    object-fit: cover; /* This ensures the image covers the entire area while maintaining its aspect ratio */
+  }
+  
+  /* Responsive behavior */
+  @media (max-width: 768px) {
+    .card-img-top {
+      height: 300px;  /* Adjusted height for smaller screens */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .card-img-top {
+      height: 250px;  /* Further adjust the height for very small screens */
+    }
+  }
+  
