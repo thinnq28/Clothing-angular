@@ -34,6 +34,10 @@ export class CommodityService {
         return this.http.get<any>(this.api, { params });
     }
 
+    getAllCommoditiesWithoutParams(): Observable<UserResponse[]> {      
+        return this.http.get<any>(`${environment.apiBaseUrl}/client-commodity`);
+    }
+
     getCommodities(name: string): Observable<UserResponse[]> {        
         const params = new HttpParams()
         .set('commotity_name', name)      

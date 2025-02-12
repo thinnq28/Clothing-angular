@@ -69,16 +69,13 @@ export class OptionValueComponent implements OnInit {
   }
 
   getOptionById(id: number) {
-    debugger
     this.optionService.getOptionById(id).subscribe({
       next: (response: any) => {
-        debugger
         this.optionValueResponse = response;
         this.optionValues = response.data.optionValues;
 
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -87,17 +84,14 @@ export class OptionValueComponent implements OnInit {
   }
 
   getAllOptionValues(optionId: number, name: string, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.optionService.getAllOptionValueByOptionId(optionId, name, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.optionValues = response.data.optionValues;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
         this.showSuccess(response.message)
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -195,6 +189,11 @@ export class OptionValueComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }

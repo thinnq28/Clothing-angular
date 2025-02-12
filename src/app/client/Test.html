@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment and Rating for Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* styles.css */
+
+.stars {
+    color: #f39c12;
+    font-size: 1.25rem;
+}
+
+.stars span {
+    margin-right: 2px;
+}
+
+.comment-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.comment-box .stars {
+    margin-bottom: 5px;
+}
+
+.comment-box img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Đánh giá và Bình luận Sản phẩm</h2>
+
+        <!-- Section for displaying product ratings -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h4>Đánh giá tổng quan</h4>
+                <div class="d-flex align-items-center">
+                    <!-- Star Rating -->
+                    <div class="stars">
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star"></span>
+                    </div>
+                    <span class="ms-3">4.0/5 (150 đánh giá)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section for users to leave a comment and rate -->
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Để lại bình luận của bạn</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Chọn mức đánh giá</label>
+                        <select class="form-select" id="rating" required>
+                            <option value="1">1 sao</option>
+                            <option value="2">2 sao</option>
+                            <option value="3">3 sao</option>
+                            <option value="4">4 sao</option>
+                            <option value="5">5 sao</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Bình luận của bạn</label>
+                        <textarea class="form-control" id="comment" rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                </form>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Section for displaying user comments -->
+        <h4>Các bình luận khác</h4>
+        <div class="comment-box mb-4">
+            <div class="d-flex">
+                <div class="me-3">
+                    <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle">
+                </div>
+                <div>
+                    <strong>Người dùng 1</strong>
+                    <div class="stars">
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star-fill"></span>
+                        <span class="bi bi-star"></span>
+                        <span class="bi bi-star"></span>
+                    </div>
+                    <p>Rất hài lòng với sản phẩm này! Chất lượng tốt và giá cả hợp lý.</p>
+                    <small>Ngày gửi: 01/02/2025</small>
+                </div>
+            </div>
+        </div>
+        <!-- More comments can be added in the same structure -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

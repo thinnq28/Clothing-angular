@@ -1,17 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RegisterDTO } from '../dtos/user/register.dto';
 import { environment } from '../environments/environment';
 import { HttpUtilService } from './http.util.service';
-import { LoginDTO } from '../dtos/user/login.dto';
 import { UserResponse } from '../responses/user/user.response';
-import { UpdateUserDTO } from '../dtos/user/update.user.dto';
-import { UserDataResponse } from '../responses/user/user.data.response';
-import { ChangePasswordDTO } from '../dtos/user/change-password.dto';
-import { OptionDTO } from '../dtos/option/option.dto';
-import { OptionUpdateDTO } from '../dtos/option/option.update.dto';
-import { OptionValueUpdateDTO } from '../dtos/option-value/optionValue.dto';
 import { SupplierDTO } from '../dtos/supplier/supplier.dto';
 
 
@@ -32,7 +24,8 @@ export class SupplierService {
     }
 
   
-    getAllSuppliers(name: string, phoneNumber: string, email:string, isAcive: boolean, page: number, limit: number): Observable<UserResponse[]> {
+    getAllSuppliers(name: string, phoneNumber: string, email:string, 
+        isAcive: boolean, page: number, limit: number): Observable<UserResponse[]> {
         const params = new HttpParams()
         .set('name', name)      
         .set('active', isAcive.toString())

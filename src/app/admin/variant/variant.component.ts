@@ -50,10 +50,8 @@ export class VariantComponent {
   }
 
   getAllVariants(name: string, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.variantService.getAllVariant(name, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         console.log(response)
         this.variants = response.data.variants;
         console.log(this.variants)
@@ -125,7 +123,6 @@ export class VariantComponent {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
   delete() {
-    debugger
     this.variantService.delete(this.variantId).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -137,7 +134,6 @@ export class VariantComponent {
         }, 3000);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

@@ -41,64 +41,73 @@ export class LoginComponent {
   }
 
   login() {
-    
+
     const loginDTO: LoginDTO = {
       phone_number: this.phoneNumber,
       password: this.password
     };
 
     this.userService.login(loginDTO).subscribe({
-      next: (response:LoginResponse) => {
+      next: (response: LoginResponse) => {
         debugger;
-        const  token  = response.data.token
+        const token = response.data.token
         if (this.rememberMe) {
-        this.tokenService.setToken(token);
+          this.tokenService.setToken(token);
 
-        this.userService.getUserDetail(token).subscribe({
-          next: (response: any) => {
-            this.userResponse = {
-              ...response
-            };
+          this.userService.getUserDetail(token).subscribe({
+            next: (response: any) => {
+              this.userResponse = {
+                ...response
+              };
 
-            debugger
-            this.userDataResponse = this.userResponse?.data;
-            if(this.userDataResponse != null){
-              for(let i = 0; i < this.userDataResponse.roles.length; i++){
-                let role = this.userDataResponse.roles[i];
-                if(role.name == "ADMIN" || role.name == "USER"){
-                  this.isAdminOrUSer = true;
+              debugger
+              this.userDataResponse = this.userResponse?.data;
+              if (this.userDataResponse != null) {
+                for (let i = 0; i < this.userDataResponse.roles.length; i++) {
+                  let role = this.userDataResponse.roles[i];
+                  if (role.name == "ADMIN" || role.name == "USER") {
+                    this.isAdminOrUSer = true;
+                  }
+                }
+              }
+
+              if (this.isAdminOrUSer) {
+                this.userService.saveUserResponseToLocalStorage(this.userDataResponse);
+                this.router.navigate(['/admin']);
+              } else {
+                this.showError("Login is failed!!!");
+              }
+              this.userService.saveUserResponseToLocalStorage(this.userDataResponse);
+            },
+            complete: () => {
+              debugger;
+              this.router.navigate(['/admin']);
+            },
+            error: (error: any) => {
+              if (error.status == 401) {
+                this.showError("Đăng nhập thất bại");
+              } else {
+                this.showError(error.error.message);
+                let errors = [];
+                errors = error.error.data;
+                for (let i = 0; i < errors.length; i++) {
+                  this.showError(errors[i]);
                 }
               }
             }
-
-            if(this.isAdminOrUSer){
-              this.userService.saveUserResponseToLocalStorage(this.userDataResponse);  
-              this.router.navigate(['/admin']);
-            }else{
-              this.showError("Login is failed!!!");
-            }
-            this.userService.saveUserResponseToLocalStorage(this.userDataResponse);  
-          },
-          complete: () => {
-            debugger;
-            this.router.navigate(['/admin']);   
-          },
-          error: (error: any) => {
-            if (error.status == 401) {
-              this.showError("Login is failed!!!");
-            } else {
-              this.showError(error.message);
-            }
-          }
-        })
-      }
+          })
+        }
       },
       complete: () => {
         debugger;
       },
       error: (error: any) => {
-        debugger;
-        alert(error.error.message);
+        this.showError(error.error.message);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     })
   }

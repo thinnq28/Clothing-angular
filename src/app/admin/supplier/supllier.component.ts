@@ -62,8 +62,8 @@ export class SupplierComponent implements OnInit {
     this.getAllSuppliers(this.name, this.phoneNumber, this.email, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
-  getAllSuppliers(name: string, phoneNumber: string, email: string, isAcive: boolean, page: number, limit: number) {
-    debugger
+  getAllSuppliers(name: string, phoneNumber: string, email: string, 
+    isAcive: boolean, page: number, limit: number) {
     this.supplierService.getAllSuppliers(name, phoneNumber, email, isAcive, page, limit).subscribe({
       next: (response: any) => {
         debugger
@@ -72,11 +72,11 @@ export class SupplierComponent implements OnInit {
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        debugger
+        console.log(error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -115,7 +115,6 @@ export class SupplierComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
   delete() {
-    debugger
     this.supplierService.delete(this.supplierDeleteId).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -127,7 +126,6 @@ export class SupplierComponent implements OnInit {
         }, 3000);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -187,7 +185,11 @@ export class SupplierComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -201,10 +203,8 @@ export class SupplierComponent implements OnInit {
   }
 
   getSupplierById(id: number) {
-    debugger
     this.supplierService.getSupplierById(id).subscribe({
       next: (response: any) => {
-        debugger
         this.supplier = response.data;
         if(this.supplier != null){
           this.supplierId = this.supplier.id;
@@ -215,7 +215,6 @@ export class SupplierComponent implements OnInit {
         }
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -250,7 +249,11 @@ export class SupplierComponent implements OnInit {
       },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }

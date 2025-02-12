@@ -34,7 +34,7 @@ export class CommodityComponent implements OnInit {
   visiblePages: number[] = [];
   commodityDeleteId = 0;
 
-  
+
   commodityName: string = '';
   commodityId: number = 0;
 
@@ -51,26 +51,21 @@ export class CommodityComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page;
     this.getAllCommodities(this.name, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
   getAllCommodities(name: string, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.commodityService.getAllCommodities(name, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.commodities = response.data.commodities;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -176,7 +171,11 @@ export class CommodityComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -187,7 +186,7 @@ export class CommodityComponent implements OnInit {
       modalDiv.style.display = 'block';
       this.commodityId = id;
       this.getCommodityById(id);
-      
+
     }
   }
 
@@ -197,7 +196,7 @@ export class CommodityComponent implements OnInit {
       next: (response: any) => {
         debugger
         this.commodity = response.data;
-        if(this.commodity != null){
+        if (this.commodity != null) {
           this.commodityName = this.commodity.commodityName;
         }
       },
@@ -214,7 +213,7 @@ export class CommodityComponent implements OnInit {
     const commodityDTO: CommodityDTO = {
       "commodityName": this.commodityName,
     }
-    
+
     this.commodityService.update(commodityDTO, this.commodityId).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -225,12 +224,16 @@ export class CommodityComponent implements OnInit {
           });
         }, 3000);
       },
-      complete: () => { 
-       
+      complete: () => {
+
       },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }

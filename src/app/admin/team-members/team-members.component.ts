@@ -56,7 +56,7 @@ export class TeamMembersComponent implements OnInit {
         this.roles = response.data;
       },
       error: (error: any) => {
-        console.error('Error getting roles:', error);
+        this.showError(error.error.message);
       }
     });
 
@@ -72,11 +72,9 @@ export class TeamMembersComponent implements OnInit {
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -108,7 +106,7 @@ export class TeamMembersComponent implements OnInit {
         this.roles = response.data;
       },
       error: (error: any) => {
-        console.error('Error getting roles:', error);
+        this.showError(error.error.message);
       }
     });
     this.getAllUsers(this.name, this.phoneNumber, this.email, this.roleId, this.isAcive, this.currentPage, this.itemsPerPage);
@@ -120,7 +118,7 @@ export class TeamMembersComponent implements OnInit {
         this.roles = response.data;
       },
       error: (error: any) => {
-        console.error('Error getting roles:', error);
+        this.showError(error.error.message);
       }
     });
 
@@ -133,8 +131,6 @@ export class TeamMembersComponent implements OnInit {
       userId: userId,
       roleId: roleId
     };
-
-    debugger
 
     this.userRoleService.addUserRole(userRoleDTO).subscribe({
       next: (response: any) => {
@@ -150,6 +146,12 @@ export class TeamMembersComponent implements OnInit {
       },
       error: (error: any) => {
         this.showError(error.error.message);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
+
       }
     })
   }

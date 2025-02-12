@@ -81,10 +81,8 @@ export class InsertVariantComponent implements OnInit {
   }
 
   selectProduct(value: any) {
-    debugger
     this.productService.getProductById(value.target.value).subscribe({
       next: (response: any) => {
-        debugger
         this.product = response.data;
         if (this.product) {
           this.product.imageUrl = `${environment.apiBaseUrl}/products/images/${this.product.imageUrl}`;
@@ -119,7 +117,6 @@ export class InsertVariantComponent implements OnInit {
                   input.value = optionValue.id.toString();
 
                   input.onclick = function () {
-                    debugger
                     let isChecked = false;
                     let elements = document.getElementsByName("option-value" + i);
                     for (let z = 0; z < elements.length; z++) {
@@ -133,9 +130,9 @@ export class InsertVariantComponent implements OnInit {
                       inputOption.type = "hidden";
                       inputOption.id = "option-" + option.id;
                       divParent.appendChild(inputOption);
-                    }else{
+                    } else {
                       const ip = document.getElementById("option-" + option.id);
-                      if(ip) ip.remove();
+                      if (ip) ip.remove();
                     }
                   }
                   divChild.appendChild(input);
@@ -159,7 +156,6 @@ export class InsertVariantComponent implements OnInit {
 
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -169,19 +165,19 @@ export class InsertVariantComponent implements OnInit {
 
   insert() {
 
-    let options : OptionVariantDTO[] = [];
+    let options: OptionVariantDTO[] = [];
 
     for (let i = 0; i < this.options.length; i++) {
       let optionElement = document.getElementById('option-' + this.options[i].id);
 
-      if(!optionElement) continue;
+      if (!optionElement) continue;
 
       let optionValueElements = document.getElementsByClassName("option-value-" + this.options[i].id);
-      let optionValues : number[] = [];
+      let optionValues: number[] = [];
 
-      for(let j = 0; j < optionValueElements.length; j++){
+      for (let j = 0; j < optionValueElements.length; j++) {
         let isChecked = (optionValueElements[j] as HTMLInputElement).checked;
-        if(isChecked) optionValues.push(Number((optionValueElements[j] as HTMLInputElement).value));
+        if (isChecked) optionValues.push(Number((optionValueElements[j] as HTMLInputElement).value));
       }
 
       const opt: OptionVariantDTO = {
@@ -209,7 +205,11 @@ export class InsertVariantComponent implements OnInit {
       },
       error: (error) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     })
   }
@@ -225,8 +225,7 @@ export class InsertVariantComponent implements OnInit {
         debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -261,7 +260,11 @@ export class InsertVariantComponent implements OnInit {
         },
         error: (error) => {
           this.showError(error.error.message);
-          this.showErrors(error.error.data);
+          let errors = [];
+          errors = error.error.data;
+          for (let i = 0; i < errors.length; i++) {
+            this.showError(errors[i]);
+          }
         }
       })
     }

@@ -7,8 +7,7 @@
         <div class="profile-item">
             <label class="label" for="fullName">Full Name:</label>
             <input class="value" type="text" 
-            id="fullName" value="John Doe"
-            formControlName="fullname" 
+            id="fullName" value="John Doe" formControlName="fullname" 
             [class.is-invalid]="userProfileForm.get('fullname')!.invalid && userProfileForm.get('fullname')!.touched">
             <div 
                     *ngIf="userProfileForm.get('fullname')!.invalid && userProfileForm.get('fullname')!.touched" 

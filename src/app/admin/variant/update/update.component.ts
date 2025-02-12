@@ -120,6 +120,11 @@ export class UpdateVariantComponent {
             },
             error: (error) => {
               this.showError(error.error.message);
+              let errors = [];
+              errors = error.error.data;
+              for (let i = 0; i < errors.length; i++) {
+                this.showError(errors[i]);
+              }
             }
           })
         }
@@ -135,7 +140,6 @@ export class UpdateVariantComponent {
   getVariantById(id: number) {
     this.variantService.getVariantById(id).subscribe({
       next: (response: any) => {
-        debugger
         this.variant = response.data;
         if (this.variant) {
           this.product = this.variant.product;
@@ -147,7 +151,6 @@ export class UpdateVariantComponent {
         }
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

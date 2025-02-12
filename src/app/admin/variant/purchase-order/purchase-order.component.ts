@@ -90,13 +90,13 @@ export class UploadExcelVariantComponent implements OnInit {
     }
   }
 
-  save(){
-    let variants : QuantityVariantDTO[] = [];
-    if(this.purchaseOrders){
+  save() {
+    let variants: QuantityVariantDTO[] = [];
+    if (this.purchaseOrders) {
       for (let index = 0; index < this.purchaseOrders.length; index++) {
         const element = this.purchaseOrders[index];
-        const variant : QuantityVariantDTO = {
-          "quantity" : element.quantity,
+        const variant: QuantityVariantDTO = {
+          "quantity": element.quantity,
           "skuId": element.skuId
         }
         variants.push(variant);
@@ -104,7 +104,7 @@ export class UploadExcelVariantComponent implements OnInit {
 
       this.variantService.updateQuantity(variants).subscribe({
         next: (response) => {
-          this.showSuccess(response.message);          
+          this.showSuccess(response.message);
 
           const purchaseOrderDTO: PurchaseOrderDTO = {
             "supplierId": this.supplierId,
@@ -123,7 +123,11 @@ export class UploadExcelVariantComponent implements OnInit {
             },
             error: (error) => {
               this.showError(error.error.message);
-              this.showErrors(error.error.data);
+              let errors = [];
+              errors = error.error.data;
+              for (let i = 0; i < errors.length; i++) {
+                this.showError(errors[i]);
+              }
             }
           });
         },
@@ -131,7 +135,7 @@ export class UploadExcelVariantComponent implements OnInit {
           this.showError(error.error.message);
           this.errors = error.error.data
         }
-      }) 
+      })
     }
   }
 
@@ -158,7 +162,7 @@ export class UploadExcelVariantComponent implements OnInit {
     // Tính toán chỉ số thật trong mảng purchaseOrders
     const index = (this.currentPage * this.rowsPerPage) + (ordinalNumber);
     console.log(index);
-  
+
     // Kiểm tra nếu chỉ số hợp lệ
     if (index >= 0 && index < this.purchaseOrders.length) {
       this.purchaseOrders.splice(index, 1);
@@ -175,7 +179,7 @@ export class UploadExcelVariantComponent implements OnInit {
     this.totalAmount = this.purchaseOrders.reduce((sum, order) => sum + order.totalAmount, 0);
   }
 
-  closeAllMessage(){
+  closeAllMessage() {
     this.errors = [];
   }
 
@@ -185,18 +189,14 @@ export class UploadExcelVariantComponent implements OnInit {
   }
 
   getSuppliers(name: string) {
-    debugger
     this.supplierService.getSuppliers(name).subscribe({
       next: (response: any) => {
-        debugger
         this.suppliers = response.data;
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }

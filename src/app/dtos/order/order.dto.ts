@@ -25,7 +25,7 @@ export class OrderDTO {
 
   paymentMethod: string;
 
-  voucherCode: string;
+  codes: string[];
 
   cart_items: { variantId: number, quantity: number }[]; // Thêm cart_items để lưu thông tin giỏ hàng
 
@@ -41,9 +41,9 @@ export class OrderDTO {
     this.note = data.note;
     this.totalMoney = data.total_money;
     this.paymentMethod = data.payment_method;
-    this.voucherCode = data.coupon_code;
     this.cart_items = data.cart_items;
-    this.status = data.status
+    this.status = data.status;
+    this.codes = data.codes
   }
 }
 

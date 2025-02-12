@@ -65,19 +65,19 @@ export class UpdateComponent {
   }
 
   ngOnInit(): void {
-      this.getSuppliers('');
-      this.getOptions('');
-      this.getCommodities('');
-      this.id = Number(this.route.snapshot.paramMap.get('id'));
-      this.getProductById(this.id);
+    this.getSuppliers('');
+    this.getOptions('');
+    this.getCommodities('');
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.getProductById(this.id);
   }
 
-  getProductById(id: number){
+  getProductById(id: number) {
     this.productService.getProductById(id).subscribe({
       next: (response: any) => {
         debugger
         this.product = response.data;
-        if(this.product){
+        if (this.product) {
           this.product.imageUrl = `${environment.apiBaseUrl}/products/images/${this.product.imageUrl}`;
           this.productName = this.product.productName;
           this.description = this.product.description;
@@ -96,10 +96,8 @@ export class UpdateComponent {
   }
 
   getOptions(name: string) {
-    debugger
     this.optionService.getOptions(name).subscribe({
       next: (response: any) => {
-        debugger
         this.options = response.data;
       },
       complete: () => {
@@ -110,7 +108,7 @@ export class UpdateComponent {
     });
   }
 
-  getSuppliersByName(){
+  getSuppliersByName() {
     this.getSuppliers(this.name);
   }
 
@@ -119,39 +117,31 @@ export class UpdateComponent {
   }
 
   getSuppliers(name: string) {
-    debugger
     this.supplierService.getSuppliers(name).subscribe({
       next: (response: any) => {
-        debugger
         this.suppliers = response.data;
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
 
   getCommodities(name: string) {
-    debugger
     this.commodityService.getCommodities(name).subscribe({
       next: (response: any) => {
-        debugger
         this.commodities = response.data;
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
-  insertSelection(){
+  insertSelection() {
     debugger
     const container = document.getElementById('options');
 
@@ -159,14 +149,14 @@ export class UpdateComponent {
     div.className = "row";
     div.style.paddingLeft = "12px"
     div.id = "options" + (this.optionsCounter + 1);
-    
+
     console.log(container)
-    
+
     const newFormGroup = document.createElement('select');
     newFormGroup.className = 'form-select col-md-6';
     newFormGroup.name = "optionId";
 
-    for(let i = 0; i < this.options.length; i++){
+    for (let i = 0; i < this.options.length; i++) {
       const newInput = document.createElement('option');
       newInput.value = this.options[i].id.toString();
       newInput.text = this.options[i].name;
@@ -184,15 +174,15 @@ export class UpdateComponent {
     btn.style.fontSize = '12px'; // Điều chỉnh kích thước chữ
     btn.style.height = '36px'; // Điều chỉnh chiều cao
     btn.style.width = '60px'; // Điều chỉnh chiều rộng
-    
+
     const counter = (this.optionsCounter + 1);
-    btn.onclick = function(){
+    btn.onclick = function () {
       const e1 = document.getElementById("options" + counter);
       const e2 = document.getElementById("btn-remove" + counter);
-      if(e1 != null) {
+      if (e1 != null) {
         e1.remove();
       }
-      if(e2){
+      if (e2) {
         e2.remove();
       }
     }
@@ -203,24 +193,24 @@ export class UpdateComponent {
     div.appendChild(newFormGroup);
     div.appendChild(btn);
     this.optionsCounter++;
-    
+
     if (container != null && container.parentNode != null) {
       container.parentNode.insertBefore(div, container.nextSibling);
     }
   }
 
-  removeOption(index : number){
+  removeOption(index: number) {
     const e1 = document.getElementById("options" + index);
-      const e2 = document.getElementById("btn-remove" + index);
-      if(e1 != null) {
-        e1.remove();
-      }
-      if(e2){
-        e2.remove();
-      }
+    const e2 = document.getElementById("btn-remove" + index);
+    if (e1 != null) {
+      e1.remove();
+    }
+    if (e2) {
+      e2.remove();
+    }
   }
 
-  updateProduct(){
+  updateProduct() {
     debugger
     let optionIds = document.getElementsByName('optionId');
     let values = [];
@@ -229,7 +219,7 @@ export class UpdateComponent {
       values.push(value)
     }
 
-    const insertProductDTO : InsertProductDTO = {
+    const insertProductDTO: InsertProductDTO = {
       name: this.productName,
       supplierId: this.supplierId,
       commodityId: this.commodityId,
@@ -240,9 +230,9 @@ export class UpdateComponent {
       next: (response) => {
         debugger
         const productId = response.data.id;
-        if(this.image){
+        if (this.image) {
           this.productService.uploadImages(productId, this.image).subscribe({
-            next: (imageResponse)  =>{
+            next: (imageResponse) => {
               this.showSuccess(response.message);
               setTimeout(() => {
                 const currentUrl = this.router.url;
@@ -253,23 +243,31 @@ export class UpdateComponent {
             },
             error: (error) => {
               this.showError(error.error.message);
-              this.showErrors(error.error.data)
+              let errors = [];
+              errors = error.error.data;
+              for (let i = 0; i < errors.length; i++) {
+                this.showError(errors[i]);
+              }
             }
           })
-        }else{
+        } else {
           this.showSuccess(response.message);
-              setTimeout(() => {
-                const currentUrl = this.router.url;
-                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                  this.router.navigate([currentUrl]);
-                });
-              }, 3000);
+          setTimeout(() => {
+            const currentUrl = this.router.url;
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              this.router.navigate([currentUrl]);
+            });
+          }, 3000);
         }
-        
+
       },
       error: (error) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     })
 
@@ -278,20 +276,20 @@ export class UpdateComponent {
   onFileChange(event: any) {
     // Retrieve selected files from input element
     const files = event.target.files;
-    
+
     if (files == null || files == undefined) {
       this.showError("You must choose Image");
       return;
-    }else{
+    } else {
       this.image = files[0];
       const newImage = document.getElementById("result");
       let img = document.createElement('img');
       img.src = URL.createObjectURL(files[0])
       img.className = "rounded-square";
-      img.style.width= "100px";
-      img.style.height= "100px";
+      img.style.width = "100px";
+      img.style.height = "100px";
 
-      if(newImage){
+      if (newImage) {
         newImage.innerHTML = "New Image Added: ";
         newImage.appendChild(img);
       }
@@ -314,7 +312,7 @@ export class UpdateComponent {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
-  imageSource(url : string){
-    if(url) window.open(url);
+  imageSource(url: string) {
+    if (url) window.open(url);
   }
 }

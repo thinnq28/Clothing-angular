@@ -146,7 +146,11 @@ export class OptionComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -200,8 +204,8 @@ export class OptionComponent implements OnInit {
     const input = document.getElementById(`input-name${index}`);
     const label = document.getElementById(`lable-name${index}`);
     const checkBoxName = document.getElementById(`checkbox-name${index}`);
-    
-    
+
+
     const btnEdit = document.getElementById(`button-option-edit${index}`);
     const btnAccept = document.getElementById(`button-option-accept${index}`);
     const checkBox = document.getElementById(`flexCheckDefaultUpdate${index}`);
@@ -210,16 +214,16 @@ export class OptionComponent implements OnInit {
     const labels = document.getElementsByClassName(`lable-name`);
     const btnEdits = document.getElementsByClassName(`button-option-edit`);
     const btnAccepts = document.getElementsByClassName(`button-option-accept`);
-    
 
-    
+
+
 
     this.updatedName = name;
     this.isMultipleUsageUpdate = isMultipleUsage;
     if (this.isUpdate) {
       if (input != null) input.style.display = 'none';
       if (btnAccept != null) btnAccept.style.display = 'none';
-      if(checkBox!= null) checkBox.style.display = 'none';
+      if (checkBox != null) checkBox.style.display = 'none';
       if (label != null) label.style.display = 'block';
       if (btnEdit != null) btnEdit.style.display = 'block';
       if (checkBoxName != null) checkBoxName.style.display = 'block';
@@ -289,7 +293,11 @@ export class OptionComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -304,7 +312,6 @@ export class OptionComponent implements OnInit {
   }
 
   deleteOption() {
-    debugger
     this.optionService.deleteOption(this.optionDelete).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -316,7 +323,6 @@ export class OptionComponent implements OnInit {
         }, 3000);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

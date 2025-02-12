@@ -82,7 +82,7 @@ export class ClientService {
   updateUserDetail(token: string, updateUserDTO: UpdateUserDTO) {
     debugger
     let userResponse = this.getUserResponseFromLocalStorage();        
-    return this.http.put(`${this.apiUpdateUser}/${userResponse?.id}`,updateUserDTO,{
+    return this.http.put(`${this.apiUpdateUser}${userResponse?.id}`,updateUserDTO,{
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`

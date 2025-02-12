@@ -58,7 +58,6 @@ export class UserProfileComponent implements OnInit {
 
     this.userService.getUserDetail(this.token).subscribe({
       next: (response: any) => {
-        debugger
         this.userResponse = {
           ...response
         };
@@ -74,7 +73,6 @@ export class UserProfileComponent implements OnInit {
         this.userService.saveUserResponseToLocalStorage(this.userDataResponse);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

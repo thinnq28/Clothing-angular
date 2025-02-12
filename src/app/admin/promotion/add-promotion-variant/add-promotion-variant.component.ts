@@ -93,10 +93,8 @@ export class AddPromotionVariantComponent {
   }
 
   getPromotionById(id: number) {
-    debugger;
     this.promotionService.getPromotionById(id).subscribe({
       next: (response: any) => {
-        debugger;
         this.promotion = response.data;
         if (this.promotion) {
           this.promotionName = this.promotion.name;
@@ -106,7 +104,6 @@ export class AddPromotionVariantComponent {
         }
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -115,7 +112,6 @@ export class AddPromotionVariantComponent {
   }
 
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page;
     this.getAllVariants(
       this.name,
@@ -141,7 +137,6 @@ export class AddPromotionVariantComponent {
     page: number,
     limit: number
   ) {
-    debugger;
     this.variantService
       .getVariants(
         name,
@@ -237,7 +232,11 @@ export class AddPromotionVariantComponent {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       },
     });
   }

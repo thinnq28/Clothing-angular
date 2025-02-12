@@ -125,7 +125,6 @@ export class ProductComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
   delete() {
-    debugger
     this.productService.delete(this.productIdDelete).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -137,7 +136,6 @@ export class ProductComponent implements OnInit {
         }, 3000);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

@@ -83,12 +83,18 @@ export class LoginClientComponent {
             complete: () => {
             },
             error: (error: any) => {
+              debugger
               if (error.status == 401) {
                 this.showError("Đăng nhập thất bại");
               } else {
-                this.showError(error.message);
+                console.log(error);
+                this.showError(error.error.message);
+                let errors = [];
+                errors = error.error.data;
+                for(let i = 0; i < errors.length; i++) {
+                  this.showError(errors[i]);
+                }
               }
-
             }
           })
         }
@@ -97,8 +103,12 @@ export class LoginClientComponent {
         debugger;
       },
       error: (error: any) => {
-        debugger;
-        alert(error.error.message);
+        this.showError(error.error.message);
+        let errors = [];
+        errors = error.error.data;
+        for(let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     })
   }

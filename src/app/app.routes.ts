@@ -20,6 +20,10 @@ import { LoginClientComponent } from './client/login/login.component';
 import { RegisterComponent } from './client/register/register.component';
 import { OrderComponent } from './client/order/order.component';
 import { ProductDetailComponent } from './client/product-detail/product-detail.component';
+import { TrackOrderComponent } from './client/track-order/track-order.component';
+import { TrackOrderDetailComponent } from './client/track-order-detail/track-order-detail.component';
+import { ClientProfileComponent } from './client/client-profile/client-profile.component';
+import { ClientChangePasswordComponent } from './client/client-change-password/client-change-password.component';
 
 export const routes: Routes = [
   { path: 'admin', loadChildren: () => import('./admin/app.routes').then(m => m.AdminAppRoutes), canActivate: [AdminGuardFn] },
@@ -29,8 +33,12 @@ export const routes: Routes = [
   { path: 'admin/login', component: LoginComponent},
   { path: 'login', component: LoginClientComponent},
   { path: 'register', component: RegisterComponent},
-  { path: 'order', component: OrderComponent},
+  { path: 'orders', component: OrderComponent},
   { path: 'product-detail/:id', component: ProductDetailComponent},
+  { path: 'tracking-order', component: TrackOrderComponent},
+  { path: 'tracking-order-detail/:id', component: TrackOrderDetailComponent},
+  { path: 'profile', component: ClientProfileComponent, canActivate: [AuthGuardFn]},
+  { path: 'change-password', component: ClientChangePasswordComponent, canActivate: [AuthGuardFn]},
 //   { path: 'register', component: RegisterComponent },
 //   { path: 'products/:id', component: DetailProductComponent },
 //   { path: 'orders', component: OrderComponent, canActivate: [AuthGuardFn] },

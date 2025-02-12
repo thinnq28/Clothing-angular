@@ -87,35 +87,28 @@ export class InsertProductComponent implements OnInit {
   }
 
   getSuppliers(name: string) {
-    debugger
     this.supplierService.getSuppliers(name).subscribe({
       next: (response: any) => {
-        debugger
         this.suppliers = response.data;
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
 
   getCommodities(name: string) {
-    debugger
     this.commodityService.getCommodities(name).subscribe({
       next: (response: any) => {
-        debugger
         this.commodities = response.data;
       },
       complete: () => {
-        debugger;
+
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -193,14 +186,10 @@ export class InsertProductComponent implements OnInit {
     this.productService.insertProduct(insertProductDTO).subscribe({
 
       next: (response) => {
-        debugger
         const productId = response.data.id;
-        console.log(this.image);
         if (this.image) {
-          debugger
           this.productService.uploadImages(productId, this.image).subscribe({
             next: (imageResponse) => {
-              debugger
               this.showSuccess(response.message);
               setTimeout(() => {
                 const currentUrl = this.router.url;
@@ -211,7 +200,11 @@ export class InsertProductComponent implements OnInit {
             },
             error: (error) => {
               this.showError(error.error.message);
-              this.showErrors(error.error.data)
+              let errors = [];
+              errors = error.error.data;
+              for (let i = 0; i < errors.length; i++) {
+                this.showError(errors[i]);
+              }
             }
           })
         }
@@ -219,7 +212,11 @@ export class InsertProductComponent implements OnInit {
       },
       error: (error) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     })
 

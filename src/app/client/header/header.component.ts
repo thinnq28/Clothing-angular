@@ -37,7 +37,6 @@ export class HeaderClientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     this.getCommodities('');
     this.user = this.userService.getUserResponseFromLocalStorage();
     
@@ -65,26 +64,27 @@ export class HeaderClientComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  redirectToTrackOrder() {
+    this.router.navigate(['/tracking-order']);
+  }
+
   redirectToRegister(){
     this.router.navigate(['/register']);
   }
 
   getCommodities(name: string) {
-    debugger
     this.commodityService.getCommodities(name).subscribe({
       next: (response: any) => {
-        debugger
         this.commodities = response.data;
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
         console.error('Error fetching products:', error);
       }
     });
   }
+  
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -100,4 +100,6 @@ export class HeaderClientComponent implements OnInit {
   toggleInventoryDropdown() {
     this.isInventoryDropdownOpen = !this.isInventoryDropdownOpen;
   }
+
+  
 }

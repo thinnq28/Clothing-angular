@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +11,8 @@ import { FooterClientComponent } from '../footer/footer.component';
 import { ProductDataResponse } from '../../responses/product/product.data.response';
 import { ProductService } from '../../service/product.service';
 import { environment } from '../../environments/environment';
+import { CommodityService } from '../../service/commodity.service';
+import { CommodityDataResponse } from '../../responses/commodity/Commodity.data.response';
 
 @Component({
   selector: 'app-home',
@@ -19,10 +21,10 @@ import { environment } from '../../environments/environment';
     ReactiveFormsModule, RouterLink, ToastModule, ButtonModule, RippleModule, HeaderClientComponent, 
     FooterClientComponent, RouterModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  styleUrls: ['./home.component.scss'],
   providers: [MessageService]
 })
-export class HomeClientComponent {
+export class HomeClientComponent implements OnInit, AfterViewInit {
 
   products: ProductDataResponse[] = [];
   currentPage: number = 0;
@@ -34,41 +36,58 @@ export class HomeClientComponent {
   commodityName: string = "";
   isActive: boolean = true;
   visiblePages: number[] = [];
+  maxPriceProduct: number = 0;
+  step: number = 10;
 
   constructor(
     private productService: ProductService,
+    private commodityService: CommodityService,
     private router: Router,
     private messageService: MessageService
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getAllProducts(this.name, this.supplierName, this.commodityName, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
+  ngAfterViewInit() {
+    // Price range label update
+    const priceRange = document.getElementById("priceRange") as HTMLInputElement;
+    const priceLabel = document.getElementById("priceLabel");
+    priceRange?.addEventListener("input", function () {
+      if (priceLabel) {
+        priceLabel.textContent = "Lên đến ₫" + priceRange.value;
+      }
+    });
+
+    // Rating range label update
+    const ratingRange = document.getElementById("ratingRange") as HTMLInputElement;
+    const ratingLabel = document.getElementById("ratingLabel");
+    ratingRange?.addEventListener("input", function () {
+      if (ratingLabel) {
+        ratingLabel.textContent = ratingRange.value + " Stars";
+      }
+    });
+  }
+
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page;
     this.getAllProducts(this.name, this.supplierName, this.commodityName, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
   getAllProducts(name: string, supplierName: string, commodityName: string, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.productService.getAllProduct(name, supplierName, commodityName, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
-        response.data.products.forEach((product: ProductDataResponse) => {          
+        response.data.products.forEach((product: ProductDataResponse) => {
           product.imageUrl = `${environment.apiBaseUrl}/products/images/${product.imageUrl}`;
         });
         this.products = response.data.products;
-        this.products = this.products.filter( e => e.variant != null);
+        this.products = this.products.filter(e => e.variant != null);
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
+        this.maxPriceProduct = Math.round(Math.max(...this.products.map(product => product.variant.price)));
+        this.step = this.maxPriceProduct/10
         this.showSuccess(response.message);
-      },
-      complete: () => {
-
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -92,7 +111,6 @@ export class HomeClientComponent {
   }
 
   searchProducts() {
-    debugger
     this.getAllProducts(this.name, this.supplierName, this.commodityName, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
@@ -102,12 +120,6 @@ export class HomeClientComponent {
 
   showSuccess(message: string) {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
-  }
-
-  showErrors(errors: string[]) {
-    for (let i = 0; i < errors.length; i++) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: errors[i], life: 10000 });
-    }
   }
 
   showError(message: string) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { HeaderClientComponent } from "../header/header.component";
 import { FooterClientComponent } from "../footer/footer.component";
 import { CommonModule } from '@angular/common';
@@ -36,7 +36,7 @@ export class OrderComponent implements OnInit {
 
   orderForm: FormGroup; // Đối tượng FormGroup để quản lý dữ liệu của form
   cartItems: { variant: VariantDataResponse, quantity: number }[] = [];
-  
+
   totalAmount: number = 0; // Tổng tiền
   cart: Map<number, number> = new Map();
   variants: VariantDataResponse[] = [];
@@ -44,6 +44,7 @@ export class OrderComponent implements OnInit {
   voucherValue: number = 0;
   userDataResponse?: UserDataResponse
   token: string = "";
+  oldVouchers: string[] = [];
 
   orderData: OrderDTO = {
     userId: 0, // Thay bằng user_id thích hợp
@@ -56,8 +57,8 @@ export class OrderComponent implements OnInit {
     totalMoney: 0, // Sẽ được tính toán dựa trên giỏ hàng và mã giảm giá
     paymentMethod: 'cod', // Mặc định là thanh toán khi nhận hàng (COD)
     // shipping_method: 'express', // Mặc định là vận chuyển nhanh (Express)
-    voucherCode: '', // Sẽ được điền từ form khi áp dụng mã giảm giá
-    cart_items: []
+    cart_items: [],
+    codes: []
   };
 
   constructor(
@@ -70,16 +71,17 @@ export class OrderComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private voucherService: VoucherService,
     private router: Router,
+    private renderer: Renderer2,
     private messageService: MessageService,
   ) {
     // Tạo FormGroup và các FormControl tương ứng
     this.orderForm = this.formBuilder.group({
-      fullname: ['', Validators.required], // fullname là FormControl bắt buộc      
+      fullName: ['', Validators.required], // fullname là FormControl bắt buộc      
       email: ['', [Validators.email]], // Sử dụng Validators.email cho kiểm tra định dạng email
-      phone_number: ['', [Validators.required, Validators.minLength(6)]], // phone_number bắt buộc và ít nhất 6 ký tự
+      phoneNumber: ['', [Validators.required, Validators.minLength(6)]], // phone_number bắt buộc và ít nhất 6 ký tự
       address: ['', [Validators.required, Validators.minLength(5)]], // address bắt buộc và ít nhất 5 ký tự
       note: [''],
-      payment_method: ['cod']
+      paymentMethod: ['cod']
     });
   }
 
@@ -106,7 +108,6 @@ export class OrderComponent implements OnInit {
     debugger
     this.cart = this.cartService.getCart();
     const variantIds = Array.from(this.cart.keys()); // Chuyển danh sách ID từ Map giỏ hàng    
-    console.log(variantIds);
     // Gọi service để lấy thông tin sản phẩm dựa trên danh sách ID
     debugger
     if (variantIds.length === 0) {
@@ -132,15 +133,14 @@ export class OrderComponent implements OnInit {
         });
       },
       complete: () => {
-        debugger;
         this.calculateTotal()
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching detail:', error);
+        this.showError(error.error.message);
       }
     });
   }
+
   placeOrder() {
     debugger
     if (this.orderForm.errors == null) {
@@ -153,14 +153,33 @@ export class OrderComponent implements OnInit {
         variantId: cartItem.variant.id,
         quantity: cartItem.quantity
       }));
+      this.orderData.codes = this.oldVouchers;
       this.orderData.totalMoney = this.totalAmount;
+      
+      if (this.tokenService.getToken() != null) {
+        this.getUserDetail(this.tokenService.getToken()!);
+        let isGuest = false;
+  
+        this.userDataResponse?.roles.forEach(e => {
+          if (e.name == "GUEST") isGuest = true;
+        })
+  
+        if (isGuest) {
+          this.orderData.userId = this.userDataResponse?.id!;
+        }
+      }
+
+      
+
       // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
       this.orderService.placeOrder(this.orderData).subscribe({
         next: (response) => {
           debugger;
-          alert('Đặt hàng thành công');
+          this.showSuccess('Đặt hàng thành công');
           this.cartService.clearCart();
-          this.router.navigate(['/']);
+          setTimeout(() => {
+            this.router.navigate(['/']);}, 3000);
+          
         },
         complete: () => {
           debugger;
@@ -168,12 +187,17 @@ export class OrderComponent implements OnInit {
         },
         error: (error: any) => {
           debugger;
-          alert(`Lỗi khi đặt hàng: ${error}`);
+          this.showError("Có lỗi khi đặt hàng!!!");
+          let errors = [];
+          errors = error.error.data;
+          for(let i = 0; i < errors.length; i++) {
+            this.showError(errors[i]);
+          }
         },
       });
     } else {
       // Hiển thị thông báo lỗi hoặc xử lý khác
-      alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+      this.showError('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
     }
   }
 
@@ -204,14 +228,14 @@ export class OrderComponent implements OnInit {
       let discountAmount = 0;
       if (this.voucher.discountType == "percentage") {
         discountAmount = (this.totalAmount * this.voucher.discount / 100);
-        if(discountAmount > this.voucher.maxDiscountAmount) discountAmount = this.voucher.maxDiscountAmount
+        if (discountAmount > this.voucher.maxDiscountAmount) discountAmount = this.voucher.maxDiscountAmount
         this.totalAmount = this.totalAmount - discountAmount;
       } else {
         this.totalAmount = this.totalAmount - this.voucher.discount;
       }
     }
 
-    if(this.totalAmount < 0 ) this.totalAmount = 0;
+    if (this.totalAmount < 0) this.totalAmount = 0;
   }
   confirmDelete(index: number): void {
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
@@ -225,7 +249,12 @@ export class OrderComponent implements OnInit {
   }
   // Hàm xử lý việc áp dụng mã giảm giá
   applyCoupon(): void {
-    debugger
+    let isApplied = this.oldVouchers.some(e => e == this.code);
+    if (isApplied) {
+      this.showError("Bạn đã sử dụng voucher này rồi");
+      return;
+    }
+
     let userId = 0;
     if (this.tokenService.getToken() != null) {
       this.getUserDetail(this.tokenService.getToken()!);
@@ -245,21 +274,72 @@ export class OrderComponent implements OnInit {
     // Viết mã xử lý áp dụng mã giảm giá ở đây
     this.voucherService.getVoucherByCode(this.code, userId).subscribe({
       next: (response) => {
+        debugger
         this.voucher = response.data;
-        this.showSuccess("Áp dụng mã giảm giá thành công")
+        if (this.voucher) {
+          this.showSuccess("Áp dụng mã giảm giá thành công");
+          this.oldVouchers.push(this.voucher.code);
+          const voucherElement = document.getElementById("voucher");
+          if (voucherElement) {
+            let discountAmount = 0;
+            if (this.voucher.discountType == "percentage") {
+              discountAmount = (this.totalAmount * this.voucher.discount / 100);
+            } else {
+              discountAmount = this.voucher.discount;
+            }
+            // Tạo một phần tử mới để thêm vào
+            const newContent = document.createElement('div');
+            newContent.className = "col-xl-3 col-md-4 mb-4 card-voucher";
+            newContent.innerHTML = `
+                <div class="card border-left-success shadow h-100 py-3">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    ${this.voucher.code}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">Discount: ${discountAmount} ₫</div>
+                            </div>
+                            <div class="col-auto">
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-index="${this.voucher.id}">
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            // Giữ lại phần input hiện tại và thêm nội dung mới
+            voucherElement.appendChild(newContent);
+
+            // Add an event listener to the delete button
+            const deleteButton = newContent.querySelector('button');
+            deleteButton?.addEventListener('click', (event) => {
+              // Get the parent card element
+              const cardElement = (event.target as HTMLElement).closest('.card-voucher');
+              // Remove the card element from the DOM
+              cardElement?.remove();
+              // Optionally, remove the voucher from the list
+              this.removeVoucherFromList(this.voucher!.id, this.voucher!.code);
+            });
+          }
+        }
       },
       complete: () => {
         debugger;
         this.calculateTotal();
       },
       error: (error: any) => {
-        console.log(error);
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for(let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       },
     })
     // Cập nhật giá trị totalAmount dựa trên mã giảm giá nếu áp dụng
   }
+  
   private updateCartFromCartItems(): void {
     this.cart.clear();
     this.cartItems.forEach((item) => {
@@ -281,6 +361,17 @@ export class OrderComponent implements OnInit {
         this.showError(error.error.message);
       }
     })
+  }
+
+  removeVoucherFromList(voucherId: number,  voucherCode: string): void {
+    
+    this.voucher = undefined; // or perform any logic to remove the voucher from your list
+    // Remove voucher code from oldVouchers array
+    const index = this.oldVouchers.indexOf(voucherCode);
+    if (index !== -1) {
+        this.oldVouchers.splice(index, 1);
+    }
+    this.calculateTotal(); // Recalculate the total amount after removing the voucher
   }
 
   showSuccess(message: string) {

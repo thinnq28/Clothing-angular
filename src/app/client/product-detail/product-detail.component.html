@@ -8,7 +8,7 @@
     <div class="col-md-6">
       <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <div *ngFor="let image of variant?.images; let i = index" class="carousel-item"
+          <div *ngFor="let image of variants[0].images; let i = index" class="carousel-item"
             [ngClass]="{'active': i === currentImageIndex}">
             <div class="square-image">
               <img [src]="image.url" class="product-image" alt="Product Image">
@@ -78,7 +78,6 @@
         </div>
         <div class="product-actions">
           <button class="btn btn-primary" (click)="addToCart()" style="color: black;">Thêm vào giỏ hàng</button>
-          <button class="btn btn-success" (click)="buyNow()">Mua ngay</button>
         </div>
         <div class="product-quantity">
           <div class="border-wrapper">
@@ -91,6 +90,50 @@
       </div>
     </div>
   </div>
+
+   <!-- Comment and Rating Section -->
+   <div class="comment-rating-section">
+    <h4>Để lại bình luận của bạn</h4>
+    <div class="comment-form">
+      <form (submit)="submitComment()">
+        <div class="mb-3">
+          <label for="rating" class="form-label">Chọn mức đánh giá</label>
+          <select class="form-select" id="rating" required>
+            <option value="1">1 sao</option>
+            <option value="2">2 sao</option>
+            <option value="3">3 sao</option>
+            <option value="4">4 sao</option>
+            <option value="5">5 sao</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="comment" class="form-label">Bình luận của bạn</label>
+          <textarea class="form-control" id="comment" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+      </form>
+    </div>
+    <hr>
+    <!-- Display existing comments -->
+    <h4>Các bình luận khác</h4>
+    <div *ngFor="let comment of comments" class="comment-item">
+      <div class="d-flex">
+        <div class="me-3">
+          <img src="https://via.placeholder.com/50" alt="User Avatar" class="rounded-circle">
+        </div>
+        <div>
+          <strong>{{ comment.userName }}</strong>
+          <div class="stars">
+            <!-- <span *ngFor="let star of [].constructor(comment.rating); let i = index" class="bi bi-star-fill"></span>
+            <span *ngFor="let star of [].constructor(5 - comment.rating); let i = index" class="bi bi-star"></span> -->
+          </div>
+          <p>{{ comment.content }}</p>
+          <small>Ngày gửi: {{ comment.createdDate }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 <div class="card flex justify-content-center">
   <p-toast />

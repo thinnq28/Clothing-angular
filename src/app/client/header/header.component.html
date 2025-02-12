@@ -21,12 +21,12 @@
         
         <li><a href="#" class="nav-link px-2 link-dark">Sell Off</a></li>
         <li><a href="#" class="nav-link px-2 link-dark">Tin hot</a></li>
-        <li><a routerLink="/order" class="nav-link px-2 link-dark">Giỏ hàng</a></li>
+        <li><a routerLink="/orders" class="nav-link px-2 link-dark">Giỏ hàng</a></li>
       </ul>
 
       <form class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" #searchForm>
-        <input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="productName" [(ngModel)]="productName">
-        <button class="btn btn-outline-dark" type="button" (click)="search()">Search</button>
+        <input class="form-control me-2" type="text" placeholder="Tên sản phẩm" aria-label="Search" name="productName" [(ngModel)]="productName">
+        <button class="btn btn-outline-dark" type="button" (click)="search()">Tìm</button>
       </form>
 
       <div class="dropdown text-end" *ngIf="user && isGuest">
@@ -35,11 +35,11 @@
           <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu text-small" [class.show]="isDropdownOpen" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#">New project...</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><a class="dropdown-item" routerLink="/tracking-order">Đơn hàng</a></li>
+          <li><a class="dropdown-item" routerLink="/change-password">Đổi mật khẩu</a></li>
+          <li><a class="dropdown-item" routerLink="/profile">Thông tin</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" (click)="signOut()">Sign out</a></li>
+          <li><a class="dropdown-item" (click)="signOut()">Đăng xuất</a></li>
         </ul>
       </div>
       <button type="button" class="btn btn-link" *ngIf="!user || !isGuest" (click)="redirectToLogin()">Login</button>

@@ -11,13 +11,13 @@
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Họ và tên</label>
                     <input type="text" 
-                        formControlName="fullname" 
+                        formControlName="fullName" 
                         class="form-control" 
                         id="fullname" 
                         placeholder="Họ và tên"
-                        [class.is-invalid]="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched">
+                        [class.is-invalid]="orderForm.get('fullName')!.invalid && orderForm.get('fullName')!.touched">
                     <div 
-                        *ngIf="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched" 
+                        *ngIf="orderForm.get('fullName')!.invalid && orderForm.get('fullName')!.touched" 
                         class="invalid-feedback">
                         Họ và tên là trường bắt buộc.
                     </div>
@@ -40,12 +40,12 @@
                     <label for="phone" class="form-label">Số điện thoại</label>
                     <input type="text" 
                         class="form-control" 
-                        formControlName="phone_number"                         
+                        formControlName="phoneNumber"                         
                         placeholder="Số điện thoại" 
                         required
                         id="phone" 
-                        [class.is-invalid]="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched">
-                        <div *ngIf="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched" class="invalid-feedback">
+                        [class.is-invalid]="orderForm.get('phoneNumber')!.invalid && orderForm.get('phoneNumber')!.touched">
+                        <div *ngIf="orderForm.get('phoneNumber')!.invalid && orderForm.get('phoneNumber')!.touched" class="invalid-feedback">
                         Số điện thoại là trường bắt buộc và ít nhất 10 ký tự.
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                 <div class="mb-3">
                     <label for="paymentMethod" style="color: rgb(0, 0, 0)">Phương thức thanh toán</label>
                     <select class="form-control" id="paymentMethod"
-                        formControlName="payment_method">                     
+                        formControlName="paymentMethod">                     
                         <option value="cod">Thanh toán khi nhận hàng</option>
                         <option value="other">Thanh toán khác</option>
                     </select>
@@ -102,8 +102,8 @@
                             </div>
                           </div>
                         </td>
-                        <td>{{ item.variant.price | number:'1.2-2' }}</td>
-                        <td>{{ (item.variant.price * item.quantity) | number:'1.2-2' }}</td>
+                        <td>{{ item.variant.price | number:'1.2-2' }}₫</td>
+                        <td>{{ (item.variant.price * item.quantity) | number:'1.2-2' }}₫</td>
                         <td>
                           <button class="btn btn-danger" (click)="confirmDelete(i)">
                             Xóa
@@ -119,12 +119,13 @@
     </div>   
 </form> 
 <div class="text-start mt-3">
-    <h4 class="header-text text-end ">Tổng giá: {{ totalAmount | number:'1.2-2'}}</h4>
+    <h4 class="header-text text-end ">Tổng giá: {{ totalAmount | number:'1.2-2'}}₫</h4>
 </div>
-<div class="mt-3">
+<div class="mt-3" >
+    <div id="voucher" class="row"></div>
     <h4 class="product-header">Nhập coupon</h4>
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Nhập coupon" name="code" [(ngModel)]="code">
+        <input type="text" class="form-control" placeholder="Nhập coupon" id="code" name="code" [(ngModel)]="code">
         <button class="btn btn-gradient" type="button" (click)="applyCoupon()">Áp dụng</button>
     </div>
 </div>            

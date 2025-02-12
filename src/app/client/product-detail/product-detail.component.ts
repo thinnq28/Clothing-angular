@@ -16,6 +16,10 @@ import { VariantDataResponse } from '../../responses/variant/variant.data.respon
 import { ImageDataResponse } from '../../responses/image/image.data.response';
 import { environment } from '../../environments/environment';
 import { OptionDataResponse } from '../../responses/option/option.data.response';
+import { TokenService } from '../../service/token.service';
+import { CommentRateDTO } from '../../dtos/comment-rate/comment-rate.dto';
+import { CommentRateService } from '../../service/comment.service';
+import { CommentRateDataResponse } from '../../responses/comment/comment.data.response';
 
 
 @Component({
@@ -34,16 +38,20 @@ export class ProductDetailComponent {
   variant?: VariantDataResponse;
   options: OptionDataResponse[] = [];
   images: ImageDataResponse[] = [];
+  comments: CommentRateDataResponse[] = [];
   productId: number = 0;
   currentImageIndex: number = 0;
   quantity: number = 1;
   isPressedAddToCart: boolean = false;
+  newComment: string = '';
+  rating: number = 0;
 
   constructor(
     private productService: ProductService,
     private variantService: VariantService,
     private cartService: CartService,
-    // private categoryService: CategoryService,
+    private tokenService: TokenService,
+    private commentRateService: CommentRateService,
     private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
     private router: Router,
@@ -53,7 +61,6 @@ export class ProductDetailComponent {
   ngOnInit() {
     // Lấy productId từ URL      
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
-    debugger
     //this.cartService.clearCart();
     //const idParam = 9 //fake tạm 1 giá trị
     if (idParam !== null) {
@@ -68,7 +75,7 @@ export class ProductDetailComponent {
           }
         },
         error(error) {
-
+        
         },
       });
 
@@ -92,7 +99,7 @@ export class ProductDetailComponent {
           this.showImage(0);
         },
         error: (error: any) => {
-          console.error('Error fetching detail:', error);
+          this.showError(error.error.message);
         }
       });
 
@@ -139,7 +146,7 @@ export class ProductDetailComponent {
       this.showSuccess("Thêm sản phẩm thành công");
     } else {
       // Xử lý khi product là null
-      this.showError("Không thể thêm sản phẩm vào giỏ hàng vì variant là null.")
+      this.showError("Không thể thêm sản phẩm vào giỏ hàng vì ban chưa chọn sản phẩm.")
     }
   }
 
@@ -158,12 +165,6 @@ export class ProductDetailComponent {
       return this.variant.price * this.quantity;
     }
     return 0;
-  }
-  buyNow(): void {
-    if (this.isPressedAddToCart == false) {
-      this.addToCart();
-    }
-    this.router.navigate(['/orders']);
   }
 
   chooseVariant(variantId: number) {
@@ -184,4 +185,42 @@ export class ProductDetailComponent {
   showError(message: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
+
+  // Các phương thức xử lý
+  setRating(rating: number) {
+    this.rating = rating;
+  }
+
+  submitComment() {
+    const commentRateDTO : CommentRateDTO = {
+      rating: this.rating,
+      product_id: this.productId,
+      content: this.newComment,
+    };
+
+    this.newComment = ''; // Reset bình luận sau khi gửi
+    this.rating = 1; // Reset rating sau khi gửi
+
+    const token = this.tokenService.getToken();
+
+    if(token) {
+      this.saveComment(commentRateDTO)
+    } else {
+      this.router.navigate(['/login']);
+      return;
+    }
+  }
+
+  saveComment(commentRateDTO: CommentRateDTO) {
+    this.commentRateService.insert(commentRateDTO).subscribe({
+      next: (response: any) => {
+        this.showSuccess(response)
+      },
+      error: (error: any) => {
+        this.showError(error.error.message);
+      }
+    });
+  }
+  
+  
 }

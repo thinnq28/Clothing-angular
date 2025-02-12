@@ -31,13 +31,13 @@ export class VoucherComponent {
   isActive: boolean = true;
   visiblePages: number[] = [];
 
-  vouchers: VoucherDataResponse[]=[];
+  vouchers: VoucherDataResponse[] = [];
   voucher?: VoucherDataResponse;
   voucherId: number = 0;
 
   codeName: string = '';
   description: string = '';
-  discount:  number = 0;
+  discount: number = 0;
   discountType: string = '';
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -57,7 +57,7 @@ export class VoucherComponent {
     this.getAllVouchers(this.code, this.startDateFilter, this.endDateFilter, this.isActive, this.currentPage, this.itemsPerPage);
   }
 
-  getAllVouchers(code: string, startDate: string, endDate: string, isAcive: boolean, page: number, limit: number){
+  getAllVouchers(code: string, startDate: string, endDate: string, isAcive: boolean, page: number, limit: number) {
     // const sDate = document.getElementById("startDateFilter");
     // const eDate = document.getElementById("endDateFilter")
 
@@ -65,7 +65,6 @@ export class VoucherComponent {
     // let end = (eDate as HTMLDataElement).value;
     this.voucherService.getAllVouchers(code, startDate, endDate, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.vouchers = response.data.vouchers;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
@@ -82,7 +81,6 @@ export class VoucherComponent {
 
 
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page;
     this.getAllVouchers(this.code, this.startDateFilter, this.endDateFilter, this.isActive, this.currentPage, this.itemsPerPage);
   }
@@ -116,15 +114,15 @@ export class VoucherComponent {
 
   save() {
     const voucherDTO: VoucherDTO = {
-        code: this.codeName,
-        discount: this.discount,
-        discountType: this.discountType,
-        description: this.description,
-        minPurchaseAmount: this.minPurchaseAmount,
-        maxDiscountAmount: this.maxDiscountAmount,
-        maxUsage: this.maxUsage,
-        startDate: this.startDate,
-        endDate: this.endDate
+      code: this.codeName,
+      discount: this.discount,
+      discountType: this.discountType,
+      description: this.description,
+      minPurchaseAmount: this.minPurchaseAmount,
+      maxDiscountAmount: this.maxDiscountAmount,
+      maxUsage: this.maxUsage,
+      startDate: this.startDate,
+      endDate: this.endDate
     }
 
     this.voucherService.insert(voucherDTO).subscribe({
@@ -140,7 +138,11 @@ export class VoucherComponent {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -168,13 +170,12 @@ export class VoucherComponent {
     }
   }
 
-  getVoucherById(id: number){
-    debugger
+  getVoucherById(id: number) {
     this.voucherService.getVoucherById(id).subscribe({
       next: (response: any) => {
         debugger
         this.voucher = response.data;
-        if(this.voucher){
+        if (this.voucher) {
           this.codeName = this.voucher.code;
           this.discount = this.voucher.discount;
           this.discountType = this.voucher.discountType;
@@ -187,7 +188,6 @@ export class VoucherComponent {
         }
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -195,7 +195,7 @@ export class VoucherComponent {
     });
   }
 
-  update(){
+  update() {
     const voucherDTO: VoucherDTO = {
       code: this.codeName,
       discount: this.discount,
@@ -206,24 +206,28 @@ export class VoucherComponent {
       maxUsage: this.maxUsage,
       startDate: this.startDate,
       endDate: this.endDate
-  }
-
-  this.voucherService.update(this.voucherId, voucherDTO).subscribe({
-    next: (response: any) => {
-      this.showSuccess(response.message);
-      setTimeout(() => {
-        const currentUrl = this.router.url;
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate([currentUrl]);
-        });
-      }, 3000);
-    },
-    complete: () => { },
-    error: (error: any) => {
-      this.showError(error.error.message);
-      this.showErrors(error.error.data);
     }
-  });
+
+    this.voucherService.update(this.voucherId, voucherDTO).subscribe({
+      next: (response: any) => {
+        this.showSuccess(response.message);
+        setTimeout(() => {
+          const currentUrl = this.router.url;
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate([currentUrl]);
+          });
+        }, 3000);
+      },
+      complete: () => { },
+      error: (error: any) => {
+        this.showError(error.error.message);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
+      }
+    });
   }
 
   closeModal() {
@@ -240,7 +244,6 @@ export class VoucherComponent {
   }
 
   delete() {
-    debugger
     this.voucherService.delete(this.voucherId).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -252,7 +255,6 @@ export class VoucherComponent {
         }, 3000);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);

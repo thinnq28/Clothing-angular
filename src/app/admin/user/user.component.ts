@@ -73,21 +73,16 @@ export class UserComponent {
   }
 
   getAllUsers(name: string, phoneNumber: string, email: string, roleId: number, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.userService.getAllUsers(name, phoneNumber, email, roleId, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
-
         this.users = response.data.users;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching products:', error);
+        this.showError(error.error.message);
       }
     });
   }
@@ -121,7 +116,6 @@ export class UserComponent {
   }
 
   deleteUser() {
-    debugger
     this.userService.deleteUser(this.userDelete).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);
@@ -134,7 +128,6 @@ export class UserComponent {
 
       },
       complete: () => {
-        debugger;
       },
       error: (error: any) => {
         this.showError(error.error.message);
@@ -164,7 +157,6 @@ export class UserComponent {
   }
 
   register() {
-    debugger
     const registerDTO: RegisterDTO = {
       "fullname": this.fullName,
       "phone_number": this.phoneNumberRegister,
@@ -189,7 +181,11 @@ export class UserComponent {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data)
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
 
       }
     });

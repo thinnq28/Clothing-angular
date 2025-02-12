@@ -11,13 +11,18 @@ import { ValidationErrors } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChangePasswordDTO } from '../../dtos/user/change-password.dto';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, ReactiveFormsModule, ToastModule, RippleModule, ButtonModule],
   templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.scss'
+  styleUrl: './change-password.component.scss',
+  providers: [MessageService]
 })
 export class ChangePasswordComponent implements OnInit {
 
@@ -29,8 +34,10 @@ export class ChangePasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private tokenService: TokenService,
+    private messageService: MessageService
   ){
     this.userChangePassword = this.formBuilder.group({
+      current_password: ['', [Validators.minLength(6)]], 
       password: ['', [Validators.minLength(6)]], 
       retype_password: ['', [Validators.minLength(6)]], 
     }, {
@@ -66,6 +73,7 @@ export class ChangePasswordComponent implements OnInit {
         return;
       }
       const changePasswordDTO: ChangePasswordDTO = {
+        current_password: this.userChangePassword.get('current_password')?.value,
         new_password: this.userChangePassword.get('password')?.value,
         confirm_password: this.userChangePassword.get('retype_password')?.value,
       };
@@ -78,10 +86,23 @@ export class ChangePasswordComponent implements OnInit {
             this.router.navigate(['/admin']).then(() => {
               window.location.reload();
             });
+            this.showSuccess(response.message);
           },
           error: (error: any) => {
-            alert(error.error.message);
+            let errors = [];
+            errors = error.error.data;
+            for(let i = 0; i < errors.length; i++) {
+              this.showError(errors[i]);
+            }
           }
         });
+  }
+
+  showSuccess(message: string) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
+  }
+
+  showError(message: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 }

@@ -58,10 +58,8 @@ export class PurchaseOrderComponent {
   }
 
   getAllOrders(supplierName: string, orderDate: string, page: number, limit: number) {
-    debugger
     this.orderService.getAllOrders(supplierName, orderDate, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.orders = response.data.orders;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);

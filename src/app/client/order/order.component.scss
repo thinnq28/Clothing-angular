@@ -1,8 +1,10 @@
 @import '../../styles/shared-styles.scss';
 
 .container {
-    color: #333; /* Changed to a dark font color for better readability */
-    background-color: #f9f9f9; /* Light background color */
+    color: #333;
+    /* Changed to a dark font color for better readability */
+    background-color: #f9f9f9;
+    /* Light background color */
     padding: 20px;
     border-radius: 10px;
 }
@@ -18,15 +20,18 @@
 }
 
 .form-control {
-    border: 1px solid #a1aeee; /* Adjusted border color */
+    border: 1px solid #a1aeee;
+    /* Adjusted border color */
     color: #333;
-    background-color: #fff; /* White background for input fields */
+    background-color: #fff;
+    /* White background for input fields */
     border-radius: 5px;
 }
 
 .form-control:focus {
     border-color: #a1aeee;
-    background-color: #e9f0ff; /* Soft blue focus background */
+    background-color: #e9f0ff;
+    /* Soft blue focus background */
 }
 
 .form-label {
@@ -48,7 +53,8 @@ table {
     border-collapse: separate;
     border-spacing: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff; /* White background for table */
+    background-color: #fff;
+    /* White background for table */
     margin-top: 20px;
 }
 
@@ -122,4 +128,17 @@ td {
 
 .product-quantity input:focus {
     outline: none;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+
+.card .btn {
+    padding: 0.25rem 0.5rem; // Adjust padding as needed
+}
+
+.card .fa-xmark {
+    font-size: 1.2rem; // Adjust icon size if necessary
 }

@@ -52,10 +52,8 @@ export class PromotionComponent implements OnInit {
 
 
   getAllPromotions(name: string, isAcive: boolean, page: number, limit: number) {
-    debugger
     this.promotionService.getAllPromotions(name, isAcive, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.promotions = response.data.promotions;
         this.totalPages = response.data.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
@@ -124,7 +122,11 @@ export class PromotionComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -164,7 +166,11 @@ export class PromotionComponent implements OnInit {
       complete: () => { },
       error: (error: any) => {
         this.showError(error.error.message);
-        this.showErrors(error.error.data);
+        let errors = [];
+        errors = error.error.data;
+        for (let i = 0; i < errors.length; i++) {
+          this.showError(errors[i]);
+        }
       }
     });
   }
@@ -179,10 +185,8 @@ export class PromotionComponent implements OnInit {
   }
 
   getPromotionById(id: number){
-    debugger
     this.promotionService.getPromotionById(id).subscribe({
       next: (response: any) => {
-        debugger
         this.promotion = response.data;
         if(this.promotion){
           this.promotionName = this.promotion.name;
@@ -214,7 +218,6 @@ export class PromotionComponent implements OnInit {
   }
 
   delete() {
-    debugger
     this.promotionService.delete(this.promotionId).subscribe({
       next: (response: any) => {
         this.showSuccess(response.message);

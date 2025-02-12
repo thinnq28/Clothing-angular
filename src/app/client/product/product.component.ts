@@ -121,4 +121,8 @@ export class ProductClientComponent {
   showError(message: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
+
+  rediectProductDetail(id: number){
+    this.router.navigate(['/product-detail/' + id]);
+  }
 }
